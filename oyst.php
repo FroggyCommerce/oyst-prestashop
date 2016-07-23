@@ -30,6 +30,9 @@ defined('_PS_VERSION_') || require dirname(__FILE__) . '/index.php';
 if (!class_exists('FroggyModule', false)) {
     require_once _PS_MODULE_DIR_.'/oyst/froggy/FroggyModule.php';
 }
+if (!class_exists('FroggyPaymentModule', false)) {
+    require_once _PS_MODULE_DIR_.'/oyst/froggy/FroggyPaymentModule.php';
+}
 
 class Oyst extends FroggyModule
 {
@@ -41,13 +44,16 @@ class Oyst extends FroggyModule
         $this->name = 'oyst';
         $this->version = '0.1.0';
         $this->author = 'Froggy Commerce / 23Prod';
-        $this->tab = 'front_office_features';
+        $this->tab = 'payments_gateways';
 
         parent::__construct();
 
         $this->displayName = $this->l('Oyst');
         $this->description = $this->l('Oyst provides 1 click shopping advertising technology and creates a new ecosystem at the crossroads of customised advertising and online payment.');
         $this->module_key = '';
+
+        $this->currencies = true;
+        $this->currencies_mode = 'checkbox';
     }
 
     /**
