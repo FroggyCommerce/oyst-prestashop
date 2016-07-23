@@ -51,9 +51,6 @@ class Oyst extends FroggyModule
         $this->displayName = $this->l('Oyst');
         $this->description = $this->l('Oyst provides 1 click shopping advertising technology and creates a new ecosystem at the crossroads of customised advertising and online payment.');
         $this->module_key = '';
-
-        $this->currencies = true;
-        $this->currencies_mode = 'checkbox';
     }
 
     /**
