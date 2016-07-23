@@ -27,3 +27,22 @@
         </p>
     </div>
 </div>
+
+<style>
+    p.payment_module a.oyst::after {
+        color: #777;
+        content: "";
+        display: block;
+        font-family: "FontAwesome";
+        font-size: 25px;
+        height: 22px;
+        margin-top: -11px;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        width: 14px;
+    }
+    p.payment_module a.oyst {
+        background: #fbfbfb url("{$oyst.module_dir}views/img/logo-oyst.png") no-repeat scroll 15px 15px;
+    }
+</style>
