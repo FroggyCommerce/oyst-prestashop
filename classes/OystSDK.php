@@ -25,6 +25,34 @@ class OystSDK
     private $_api_payment_endpoint;
     private $_api_catalog_endpoint;
 
+    public function testRequest()
+    {
+        $data = array(
+            'amount' => array(
+                'value' => 100,
+                'currency' => 'EUR',
+            ),
+            'is_3d' => true,
+            'label' => 'ConnectionTest',
+            'notification_url' => 'http://localhost.test',
+            'order_id' => 'ConnectionTest',
+            'redirects' => array(
+                'cancel_url' => 'http://localhost.test',
+                'error_url' => 'http://localhost.test',
+                'return_url' => 'http://localhost.test',
+            ),
+            'shopper_email' => Configuration::get('PS_SHOP_EMAIL'),
+        );
+
+        $result = $this->_apiRequest($this->getApiPaymentEndpoint(), $data);
+        $result = json_decode($result, true);
+        if (isset($result['url']) && !empty($result['url'])) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function paymentRequest($amount, $currency, $id_cart, $urls = array(), $is_3d, $shopper_email)
     {
         $data = array(

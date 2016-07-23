@@ -66,6 +66,13 @@
                         <div class="col-lg-9">
                             <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY}" />
                             <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
+                            {if isset($oyst.oyst_connection_test)}
+                                {if $oyst.oyst_connection_test}
+                                    <div class="alert alert-success">{l s='Your key is valid!' mod='oyst'}</div>
+                                {else}
+                                    <div class="alert alert-danger">{l s='Your key seems invalid!' mod='oyst'}</div>
+                                {/if}
+                            {/if}
                         </div>
                     </div>
 

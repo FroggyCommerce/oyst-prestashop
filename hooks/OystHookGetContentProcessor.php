@@ -19,6 +19,13 @@
  * @license   Unauthorized copying of this file, via any medium is strictly prohibited
  */
 
+/*
+ * Include Oyst SDK
+ */
+if (!class_exists('OystSDK', false)) {
+    require_once _PS_MODULE_DIR_.'/oyst/classes/OystSDK.php';
+}
+
 class OystHookGetContentProcessor extends FroggyHookProcessor
 {
     public $configuration_result = '';
@@ -71,6 +78,13 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         }
         $assign['result'] = $this->configuration_result;
         $assign['ps_version'] = Tools::substr(_PS_VERSION_, 0, 3);
+
+        if (Configuration::get('FC_OYST_PAYMENT_FEATURE') == 1) {
+            $oyst_api = new OystSDK();
+            $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));
+            $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
+            $assign['oyst_connection_test'] = $oyst_api->testRequest();
+        }
 
         $this->smarty->assign($this->module->name, $assign);
 
