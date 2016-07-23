@@ -1,0 +1,28 @@
+{
+    "tab" : "front_office_features",
+    "version": "0.1.0",
+    "need_instance": 0,
+
+    "hooks": {
+        "all" : [ "displayPayment", "displayPaymentReturn" ]
+    },
+
+    "sql" : {
+        "install" : [ "install.sql" ],
+        "uninstall" : [ "uninstall.sql" ]
+    },
+
+    "configurations" : {
+        "FC_OYST_PAYMENT_FEATURE" : "0",
+        "FC_OYST_CATALOG_EXPORT_FEATURE" : "0",
+        "FC_OYST_IMPORT_ORDERS_FEATURE" : "0",
+        "FC_OYST_API_KEY" : "",
+        "FC_OYST_API_PAYMENT_ENDPOINT" : "http://payment.staging.oyst.eu/payments",
+        "FC_OYST_API_EXPORT_ENDPOINT" : "http://catalog.staging.oyst.eu",
+        "FC_OYST_EXPORT_CATS" : ""
+    }
+}
+
+
+
+
