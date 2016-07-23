@@ -79,6 +79,9 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         $assign['result'] = $this->configuration_result;
         $assign['ps_version'] = Tools::substr(_PS_VERSION_, 0, 3);
 
+        $assign['allow_url_fopen_check'] = ini_get('allow_url_fopen');
+        $assign['curl_check'] = function_exists('curl_version');
+
         if (Configuration::get('FC_OYST_PAYMENT_FEATURE') == 1) {
             $oyst_api = new OystSDK();
             $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));

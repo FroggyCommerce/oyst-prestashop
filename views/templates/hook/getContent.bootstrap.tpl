@@ -27,6 +27,23 @@
 </div>
 {/if}
 
+{if !$oyst.allow_url_fopen_check}
+    <div class="bootstrap">
+        <div class="alert alert-danger">
+            {l s='You have to enable "allow_url_fopen" on your server to use this module!' mod='oyst'}
+        </div>
+    </div>
+{/if}
+{if !$oyst.curl_check}
+    <div class="bootstrap">
+        <div class="alert alert-danger">
+            {l s='You have to enable "curl" extension on your server to use this module!' mod='oyst'}
+        </div>
+    </div>
+{/if}
+
+{if $oyst.allow_url_fopen_check && $oyst.curl_check}
+
 <fieldset id="oyst_fieldset">
     <h2>{l s='Oyst configuration' mod='oyst'}</h2>
     <div class="panel">
@@ -100,3 +117,4 @@
     </div>
 </fieldset>
 
+{/if}
