@@ -61,4 +61,11 @@ class Oyst extends FroggyModule
     {
         return $this->hookGetContent();
     }
+
+    public function exportCatalog()
+    {
+        require_once _PS_MODULE_DIR_.'/oyst/controllers/cron/ExportCatalog.php';
+        $controller = new OystExportCatalogModuleCronController($this);
+        $controller->run();
+    }
 }
