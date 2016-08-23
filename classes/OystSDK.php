@@ -70,7 +70,7 @@ class OystSDK
                 'return_url' => $urls['return'],
             ),
             'user' => $user,
-            'shopper_email' => $user['email'],
+            //'shopper_email' => $user['email'],
         );
         return $this->_apiRequest($this->getApiPaymentEndpoint(), $data);
     }
