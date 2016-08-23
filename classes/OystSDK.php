@@ -53,7 +53,7 @@ class OystSDK
         return false;
     }
 
-    public function paymentRequest($amount, $currency, $id_cart, $urls = array(), $is_3d, $shopper_email)
+    public function paymentRequest($amount, $currency, $id_cart, $urls = array(), $is_3d, $user)
     {
         $data = array(
             'amount' => array(
@@ -69,9 +69,9 @@ class OystSDK
                 'error_url' => $urls['error'],
                 'return_url' => $urls['return'],
             ),
-            'shopper_email' => $shopper_email,
+            'user' => $user,
+            'shopper_email' => $user['email'],
         );
-
         return $this->_apiRequest($this->getApiPaymentEndpoint(), $data);
     }
 

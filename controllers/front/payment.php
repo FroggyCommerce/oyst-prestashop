@@ -32,6 +32,7 @@ class OystPaymentModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
+        // Build urls and amount
         $urls = array(
             'notification' => $this->context->link->getModuleLink('oyst', 'notification'),
             'cancel' => $this->context->link->getModuleLink('oyst', 'cancel'),
@@ -40,13 +41,47 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         );
         $currency = new CurrencyCore($this->context->cart->id_currency);
         $total_amount = (int)ceil($this->context->cart->getOrderTotal() * 100);
-        $customer_email = $this->context->customer->email;
 
+        // Build user variables
+        $addresses_oyst = array();
+        $addresses = array(
+            new Address($this->context->cart->id_address_invoice),
+            new Address($this->context->cart->id_address_delivery),
+        );
+        $main_phone = '';
+        if (isset($addresses[0]->phone) && !empty($addresses[0]->phone)) {
+            $main_phone = $addresses[0]->phone_mobile;
+        }
+        if (empty($main_phone) && isset($addresses[0]->phone) && !empty($addresses[0]->phone)) {
+            $main_phone = $addresses[0]->phone;
+        }
+
+        foreach ($addresses as $ka => $address) {
+            $country = new Country($address->id_country, $this->context->language->id);
+            $addresses_oyst[] = array(
+                'country' => $country->name,
+                'city' => $address->city,
+                'label' => $address->alias,
+                'postcode' => $address->postcode,
+                'street' => $address->address1,
+            );
+        }
+        $user = array(
+            'addresses' => $addresses_oyst,
+            'email' => $this->context->customer->email,
+            'first_name' => $this->context->customer->firstname,
+            'language' => $this->context->language->iso_code,
+            'last_name' => $this->context->customer->lastname,
+            'phone' => $main_phone,
+        );
+
+        // Make Oyst api call
         $oyst_api = new OystSDK();
         $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));
         $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
-        $result = $oyst_api->paymentRequest($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true, $customer_email);
+        $result = $oyst_api->paymentRequest($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true, $user);
 
+        // Redirect to payment
         $result = json_decode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
             header('location:'.$result['url']);
