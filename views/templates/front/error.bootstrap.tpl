@@ -17,3 +17,10 @@
  * @copyright 2013-2016 Froggy Commerce / 23Prod / Oyst
  * @license GNU GENERAL PUBLIC LICENSE
  *}
+
+<div class="alert alert-danger">
+    {l s='An error occured with Oyst Payment. Please contact support.' mod='oyst'}
+    {if isset($smarty.get.debug)}
+        <pre>{$oyst_debug|print_r}</pre>
+    {/if}
+</div>

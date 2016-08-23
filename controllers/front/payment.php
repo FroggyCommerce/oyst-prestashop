@@ -88,6 +88,13 @@ class OystPaymentModuleFrontController extends ModuleFrontController
             exit;
         }
 
-        die('An error occured with Oyst Payment. Please contact support.');
+        // Redirect to error page, save data in
+        $this->context->cookie->oyst_debug = json_encode(array_merge(
+            $user,
+            $result,
+            array($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true))
+        );
+        header('location:'.$urls['error']);
+        exit;
     }
 }
