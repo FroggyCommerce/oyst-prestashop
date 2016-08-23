@@ -5,8 +5,8 @@
  * NOTICE OF LICENSE
  *
  * You should have received a licence with this module.
- * If you didn't buy this module on Froggy-Commerce.com, ThemeForest.net
- * or Addons.PrestaShop.com, please contact us immediately : contact@froggy-commerce.com
+ * If you didn't download this module on Froggy-Commerce.com, ThemeForest.net,
+ * Addons.PrestaShop.com, or Oyst.com, please contact us immediately : contact@froggy-commerce.com
  *
  * DISCLAIMER
  *
@@ -15,8 +15,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    Froggy Commerce <contact@froggy-commerce.com>
- * @copyright 2013-2016 Froggy Commerce / 23Prod
- * @license   Unauthorized copying of this file, via any medium is strictly prohibited
+ * @copyright 2013-2016 Froggy Commerce / 23Prod / Oyst
+ * @license GNU GENERAL PUBLIC LICENSE
  */
 
 class OystReturnModuleFrontController extends ModuleFrontController
