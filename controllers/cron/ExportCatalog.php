@@ -30,7 +30,7 @@ if (!class_exists('OystSDK', false)) {
  * Include Oyst Product Class
  */
 if (!class_exists('OystProduct', false)) {
-    require_once _PS_MODULE_DIR_.'/oyst/classes/OystProduct15.php';
+    require_once _PS_MODULE_DIR_.'/oyst/classes/OystProduct.php';
 }
 
 class OystExportCatalogModuleCronController
