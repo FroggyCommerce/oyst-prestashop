@@ -28,6 +28,21 @@ if (!defined('_PS_VERSION_')) {
 
 class OystProduct
 {
+    public $context;
+    public $languages;
+
+    /**
+     * OystExportCatalogModuleCronController constructor.
+     */
+    public function __construct()
+    {
+        $this->context = Context::getContext();
+        $languages = Language::getLanguages(true);
+        foreach ($languages as $language) {
+            $this->languages[$language['iso_code']] = $language['id_lang'];
+        }
+    }
+
     /**
      * Make products MySQL request
      * @param integer $id_lang
@@ -35,7 +50,7 @@ class OystProduct
      * @param integer $limit
      * @return mysql ressource
      */
-    public static function getProductsRequest($id_lang, $start = 0, $limit = 0)
+    public function getProductsRequest($id_lang, $start = 0, $limit = 0)
     {
         // Retrieve context
         $context = Context::getContext();
@@ -72,114 +87,160 @@ class OystProduct
         return Db::getInstance()->query($sql);
     }
 
+
+
+
     /**
-     * Get product declinations
+     * Convert product data for Oyst Webservice
      * @param integer $id_product
-     * @param integer $id_lang
-     * @return boolean|array
+     * @return array $product (oyst format)
      */
-    public static function getProductDeclinations($id_product, $id_lang)
+    public function getProductData($id_product)
     {
-        if (!Combination::isFeatureActive())
-            return false;
+        // Load product and associated categories
+        $product = new ProductCore($id_product, true, $this->context->language->id);
+        list($main_category, $categories) = $this->getProductCategories($product);
 
-        $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
-                    a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
-                    IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
-                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`upc`, product_attribute_shop.`unit_price_impact`,
-                    product_attribute_shop.`wholesale_price`,
-                    pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`, pa.`location`
-                FROM `'._DB_PREFIX_.'product_attribute` pa
-                '.Shop::addSqlAssociation('product_attribute', 'pa').'
-                '.Product::sqlStock('pa', 'pa').'
-                LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
-                LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-                LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-                LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON a.`id_attribute` = al.`id_attribute`
-                LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON ag.`id_attribute_group` = agl.`id_attribute_group`
-                '.Shop::addSqlAssociation('attribute', 'a').'
-                WHERE pa.`id_product` = '.(int)$id_product.'
-                    AND al.`id_lang` = '.(int)$id_lang.'
-                    AND agl.`id_lang` = '.(int)$id_lang.'
-                GROUP BY id_attribute_group, id_product_attribute
-                ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
-        $attributes_groups = Db::getInstance()->executeS($sql);
+        // Build product
+        return array(
+            'reference' => $product->id,
+            'merchant_reference' => $product->reference,
+            'is_active' => ($product->active == 1 ? true : false),
+            'is_materialized' => ($product->is_virtual == 1 ? true : false),
+            'title' => $product->name,
+            'condition' => ($product->condition == 'used' ? 'reused' : $product->condition),
+            'short_description' => $product->description_short,
+            'description' => $product->description,
+            'tags' => explode(', ', $product->getTags($this->context->language->id)),
+            'amount_excluding_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, false, null, 2, null, false, false),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'amount_including_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, true, null, 2, null, false, false),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'sale_amount_excluding_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, false, null, 2),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'sale_amount_including_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, true, null, 2),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'meta' => array(
+                'title' => $product->meta_title,
+                'description' => $product->meta_description,
+            ),
+            'url' => $this->context->link->getProductLink($product->id),
+            'categories' => $categories,
+            'category' => $main_category,
+            'manufacturer' => $product->manufacturer_name,
+            'shipments' => $this->getProductShipments($product),
+            'available_quantity' => $product->quantity,
+            'minimum_orderable_quantity' => $product->minimal_quantity,
+            'outstock_message' => $product->available_later,
+            'instock_message' => $product->available_now,
+            //'promotional_message' => '',
+            'is_orderable_outstock' => ($product->out_of_stock == 1 || ($product->out_of_stock == 2 && Configuration::get('PS_ORDER_OUT_OF_STOCK') == 1) ? true : false),
+            //'cpa' => 0,
+            'images' => $this->getProductImages($product),
+            'informations' => $this->getProductInformations($product),
+            'skus' => $this->getProductSkus($product),
+        );
+    }
 
-        $combinations = false;
-        if (is_array($attributes_groups) && $attributes_groups)
-        {
-            // Retrieve context
-            $context = Context::getContext();
-            if (!isset($context->link))
-                $context->link = new Link();
+    /**
+     * Get categories and main category
+     * @param ProductCore $product
+     * @return array
+     */
+    public function getProductCategories($product)
+    {
+        // Get product categories ID
+        $product_categories = $product->getCategories();
 
-            // Retrieve images corresponding to each declination
-            $ids = array();
-            $images = array();
-            foreach ($attributes_groups as $pa)
-                $ids[] = (int)$pa['id_product_attribute'];
-            $result = Db::getInstance()->executeS('
-            SELECT pai.`id_image`, pai.`id_product_attribute`
-            FROM `'._DB_PREFIX_.'product_attribute_image` pai
-            LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = pai.`id_image`)
-            WHERE pai.`id_product_attribute` IN ('.implode(', ', $ids).') ORDER by i.`position`');
-            foreach ($result as $row)
-                if ($row['id_image'] > 0)
-                    $images[$row['id_product_attribute']][] = $context->link->getImageLink('product', $row['id_image'], 'thickbox_default');
+        // Build categories
+        $main_category = array();
+        $categories = array();
+        foreach ($product_categories as $id_category) {
 
-            // Retrieve infos for each declination
-            foreach ($attributes_groups as $k => $row)
-            {
-                $combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
-                $combinations[$row['id_product_attribute']]['price'] = (float)$row['price'];
-                $combinations[$row['id_product_attribute']]['ecotax'] = (float)$row['ecotax'];
-                $combinations[$row['id_product_attribute']]['weight'] = (float)$row['weight'];
-                $combinations[$row['id_product_attribute']]['quantity'] = (int)$row['quantity'];
-                $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
-                $combinations[$row['id_product_attribute']]['ean13'] = $row['ean13'];
-                $combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
-                $combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
-                $combinations[$row['id_product_attribute']]['wholesale_price'] = $row['wholesale_price'];
-                $combinations[$row['id_product_attribute']]['location'] = $row['location'];
-                if (isset($images[$row['id_product_attribute']]))
-                    $combinations[$row['id_product_attribute']]['images'] = $images[$row['id_product_attribute']];
-
-                if (empty($combinations[$row['id_product_attribute']]['location'])) {
-                    $combinations[$row['id_product_attribute']]['location'] = Db::getInstance()->getValue('
-                        SELECT `location`
-                        FROM `'._DB_PREFIX_.'warehouse_product_location`
-                        WHERE `id_product` = '.(int)$id_product.'
-                        AND `id_product_attribute` = '.(int)$row['id_product_attribute'].'
-                        AND `location` != \'\'
-                    ');
+            // Retrieve names for category
+            $category = new Category($id_category);
+            $c = array('titles' => array(), 'reference' => $id_category);
+            foreach ($this->languages as $iso_code => $id_lang) {
+                if (isset($category->name[$id_lang])) {
+                    $c['titles'][] = array(
+                        'name' => $category->name[$id_lang],
+                        'language' => $iso_code,
+                    );
                 }
             }
+
+            // Merge result and set main category
+            $categories[] = $c;
+            if ($product->id_category_default == $category->id) {
+                $main_category = $c;
+            }
         }
-        return $combinations;
+
+        return array($main_category, $categories);
     }
 
     /**
-     * Get product tags
-     * @param integer $id_product
-     * @param integer $id_lang
-     * @return string $tags
+     * Get available shipments for products (up to 10 quantity)
+     * @param ProductCore $product
+     * return array $shipments
      */
-    public static function getProductTags($id_product, $id_lang)
+    public function getProductShipments($product)
     {
-        $sql = 'SELECT t.`name` FROM `'._DB_PREFIX_.'product_tag` pt
-                LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.`id_tag` = pt.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
-                WHERE pt.`id_product` = '.(int)$id_product;
-        $tags_list = Db::getInstance()->executeS($sql);
 
-        $tags = array();
-        foreach ($tags_list as $t) {
-            if (!empty($t['name']))
-                $tags[] = $t['name'];
+    }
+
+    /**
+     * Get product images
+     * @param ProductCore $product
+     * return array $images
+     */
+    public function getProductImages($product)
+    {
+        $images = array();
+        $product_images = $product->getImages($this->context->language->id);
+
+        foreach ($product_images as $product_image) {
+            $images[] = $this->context->link->getImageLink('product', $product_image['id_image'], 'thickbox_default');
         }
 
-        return $tags;
+        return $images;
+    }
+
+    /**
+     * Get product images
+     * @param ProductCore $product
+     * return array $informations
+     */
+    public function getProductInformations($product)
+    {
+        $informations = array();
+        $product_informations = $product->getFeatures();
+
+        foreach ($product_informations as $product_information) {
+            $feature = new Feature($product_information['id_feature'], $this->context->language->id);
+            $feature_value = new FeatureValue($product_information['id_feature_value'], $this->context->language->id);
+            $informations[$feature->name] = $feature_value->value;
+        }
+
+        return $informations;
     }
 
 
+    /**
+     * Get product images
+     * @param ProductCore $product
+     * return array $skus
+     */
+    public function getProductSkus($product)
+    {
+    }
 }
 
