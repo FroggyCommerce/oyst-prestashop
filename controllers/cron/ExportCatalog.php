@@ -39,6 +39,10 @@ class OystExportCatalogModuleCronController
     public $languages;
     private $_module;
 
+    /**
+     * OystExportCatalogModuleCronController constructor.
+     * @param Oyst $module
+     */
     public function __construct($module)
     {
         $this->_module = $module;
@@ -53,10 +57,87 @@ class OystExportCatalogModuleCronController
         }
     }
 
+    /**
+     * Run method
+     */
+    public function run()
+    {
+        // Get products
+        $result = OystProduct::getProductsRequest($this->context->language->id);
+        while ($row = Db::getInstance()->nextRow($result)) {
+            $product = $this->convertProduct($row);
+            d($product);
+        }
+    }
+
+    /**
+     * Convert product data for Oyst Webservice
+     * @param array $row product
+     * @return array $product (oyst format)
+     */
     public function convertProduct($row)
     {
-        // Load product and product categories
-        $product = new Product($row['id_product'], $this->context->language->id);
+        // Load product and associated categories
+        $product = new ProductCore($row['id_product'], true, $this->context->language->id);
+        list($main_category, $categories) = $this->getProductCategories($product);
+
+        // Build product
+        return array(
+            'reference' => $product->id,
+            'merchant_reference' => $product->reference,
+            'is_active' => ($product->active == 1 ? true : false),
+            'is_materialized' => ($product->is_virtual == 1 ? true : false),
+            'title' => $product->name,
+            'condition' => ($product->condition == 'used' ? 'reused' : $product->condition),
+            'short_description' => $product->description_short,
+            'description' => $product->description,
+            'tags' => OystProduct::getProductTags($product->id, $this->context->language->id),
+            'amount_excluding_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, false, null, 2, null, false, false),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'amount_including_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, true, null, 2, null, false, false),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'sale_amount_excluding_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, false, null, 2),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'sale_amount_including_taxes' => array(
+                'value' => Product::getPriceStatic($product->id, true, null, 2),
+                'currency' => $this->context->currency->iso_code,
+            ),
+            'meta' => array(
+                'title' => $product->meta_title,
+                'description' => $product->meta_description,
+            ),
+            'url' => $this->context->link->getProductLink($product->id),
+            'categories' => $categories,
+            'category' => $main_category,
+            'manufacturer' => $product->manufacturer_name,
+            'shipments' => $this->getProductShipments($product),
+            'available_quantity' => $product->quantity,
+            'minimum_orderable_quantity' => $product->minimal_quantity,
+            'outstock_message' => $product->available_later,
+            'instock_message' => $product->available_now,
+            //'promotional_message' => '',
+            'is_orderable_outstock' => ($product->out_of_stock == 1 || ($product->out_of_stock == 2 && Configuration::get('PS_ORDER_OUT_OF_STOCK') == 1) ? true : false),
+            //'cpa' => 0,
+            'images' => $this->getProductImages($product),
+            'informations' => $this->getProductInformations($product),
+            'skus' => $this->getProductSkus($product),
+        );
+    }
+
+    /**
+     * Get categories and main category
+     * @param ProductCore $product
+     * @return array
+     */
+    public function getProductCategories($product)
+    {
+        // Get product categories ID
         $product_categories = $product->getCategories();
 
         // Build categories
@@ -83,50 +164,62 @@ class OystExportCatalogModuleCronController
             }
         }
 
-        // Build product
-        return array(
-            'reference' => $row['id_product'],
-            'merchant_reference' => $row['reference'],
-            'is_active' => $row['active'],
-            'is_materialized' => false,
-            'title' => $row['name'],
-            'condition' => ($row['condition'] == 'used' ? 'reused' : $row['condition']),
-            'short_description' => $row['description_short'],
-            'tags' => OystProduct::getProductTags($row['id_product'], $this->context->language->id),
-            'amount_excluding_taxes' => array(
-                'value' => Product::getPriceStatic($row['id_product'], false, null, 2, null, false, false),
-                'currency' => $this->context->currency->iso_code,
-            ),
-            'amount_including_taxes' => array(
-                'value' => Product::getPriceStatic($row['id_product'], true, null, 2, null, false, false),
-                'currency' => $this->context->currency->iso_code,
-            ),
-            'sale_amount_excluding_taxes' => array(
-                'value' => $row['price'] = Product::getPriceStatic($row['id_product'], false, null, 2),
-                'currency' => $this->context->currency->iso_code,
-            ),
-            'sale_amount_including_taxes' => array(
-                'value' => $row['price'] = Product::getPriceStatic($row['id_product'], true, null, 2),
-                'currency' => $this->context->currency->iso_code,
-            ),
-            'meta' => array(
-                'title' => $row['meta_title'],
-                'description' => $row['meta_description'],
-            ),
-            'url' => $this->context->link->getProductLink($row['id_product']),
-            'categories' => $categories,
-            'category' => $main_category,
-        );
+        return array($main_category, $categories);
     }
 
-    public function run()
+    /**
+     * Get available shipments for products (up to 10 quantity)
+     * @param ProductCore $product
+     * return array $shipments
+     */
+    public function getProductShipments($product)
     {
-        // Get products
-        $result = OystProduct::getProductsRequest($this->context->language->id);
-        while ($row = Db::getInstance()->nextRow($result)) {
-            $product = $this->convertProduct($row);
-            d($product);
+
+    }
+
+    /**
+     * Get product images
+     * @param ProductCore $product
+     * return array $images
+     */
+    public function getProductImages($product)
+    {
+        $images = array();
+        $product_images = $product->getImages($this->context->language->id);
+
+        foreach ($product_images as $product_image) {
+            $images[] = $this->context->link->getImageLink('product', $product_image['id_image'], 'thickbox_default');
         }
 
+        return $images;
+    }
+
+    /**
+     * Get product images
+     * @param ProductCore $product
+     * return array $informations
+     */
+    public function getProductInformations($product)
+    {
+        $informations = array();
+        $product_informations = $product->getFeatures();
+
+        foreach ($product_informations as $product_information) {
+            $feature = new Feature($product_information['id_feature'], $this->context->language->id);
+            $feature_value = new FeatureValue($product_information['id_feature_value'], $this->context->language->id);
+            $informations[$feature->name] = $feature_value->value;
+        }
+
+        return $informations;
+    }
+
+
+    /**
+     * Get product images
+     * @param ProductCore $product
+     * return array $skus
+     */
+    public function getProductSkus($product)
+    {
     }
 }
