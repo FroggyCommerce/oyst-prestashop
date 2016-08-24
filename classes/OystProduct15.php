@@ -98,7 +98,7 @@ class OystProduct
     public function getProductData($id_product)
     {
         // Load product and associated categories
-        $product = new ProductCore($id_product, true, $this->context->language->id);
+        $product = new Product($id_product, true, $this->context->language->id);
         list($main_category, $categories) = $this->getProductCategories($product);
 
         // Build product
@@ -128,6 +128,7 @@ class OystProduct
                 'value' => Product::getPriceStatic($product->id, true, null, 2),
                 'currency' => $this->context->currency->iso_code,
             ),
+            'vat' => ($product->tax_rate * 100),
             'meta' => array(
                 'title' => $product->meta_title,
                 'description' => $product->meta_description,
@@ -241,6 +242,51 @@ class OystProduct
      */
     public function getProductSkus($product)
     {
+        $skus = array();
+        $combinations = array();
+        $attribute_combinations = $product->getAttributeCombinations($this->context->language->id);
+
+        foreach ($attribute_combinations as $row) {
+            $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
+            $combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['group_name'].' '.$row['attribute_name'];
+            $combinations[$row['id_product_attribute']]['weight'] = $row['weight'];
+            $combinations[$row['id_product_attribute']]['ean13'] = $row['ean13'];
+            $combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
+            $combinations[$row['id_product_attribute']]['quantity'] = $row['quantity'];
+            $combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
+        }
+
+        foreach ($combinations as $id_product_attribute => $sku) {
+            $skus[] = array(
+                'reference' => $sku['reference'],
+                'title' => $product->name.' - '.implode(' - ', $sku['attributes_values']),
+                'amount_excluding_taxes' => array(
+                    'value' => Product::getPriceStatic($product->id, false, $id_product_attribute, 2, null, false, false),
+                    'currency' => $this->context->currency->iso_code,
+                ),
+                'amount_including_taxes' => array(
+                    'value' => Product::getPriceStatic($product->id, true, $id_product_attribute, 2, null, false, false),
+                    'currency' => $this->context->currency->iso_code,
+                ),
+                'sale_amount_excluding_taxes' => array(
+                    'value' => Product::getPriceStatic($product->id, false, $id_product_attribute, 2),
+                    'currency' => $this->context->currency->iso_code,
+                ),
+                'sale_amount_including_taxes' => array(
+                    'value' => Product::getPriceStatic($product->id, true, $id_product_attribute, 2),
+                    'currency' => $this->context->currency->iso_code,
+                ),
+                'vat' => ($product->tax_rate * 100),
+                'available_quantity' => $sku['quantity'],
+                'weight' => $sku['weight'],
+                'minimum_orderable_quantity' => $sku['minimal_quantity'],
+                'images' => array(),
+                'ean' => $sku['ean13'],
+                'upc' => $sku['upc'],
+            );
+        }
+
+        return $skus;
     }
 }
 

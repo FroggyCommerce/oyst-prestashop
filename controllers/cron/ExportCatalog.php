@@ -35,8 +35,8 @@ if (!class_exists('OystProduct', false)) {
 
 class OystExportCatalogModuleCronController
 {
-    public $context;
     private $_module;
+    public $context;
 
     /**
      * OystExportCatalogModuleCronController constructor.
