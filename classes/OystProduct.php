@@ -36,7 +36,14 @@ class OystProduct
      */
     public function __construct()
     {
+        // Set context
         $this->context = Context::getContext();
+        if (!isset($this->context->currency) || !Validate::isLoadedObject($this->context->currency)) {
+            $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        }
+        $this->context->shop = new Shop($this->context->shop->id);
+
+        // Set languages
         $languages = Language::getLanguages(true);
         foreach ($languages as $language) {
             $this->languages[$language['iso_code']] = $language['id_lang'];
@@ -50,7 +57,7 @@ class OystProduct
      * @param integer $limit
      * @return mysql ressource
      */
-    public function getProductsRequest($id_lang, $start = 0, $limit = 0)
+    public function getProductsRequest($start = 0, $limit = 0)
     {
         // Retrieve context
         $context = Context::getContext();
@@ -193,7 +200,7 @@ class OystProduct
      * @param ProductCore $product
      * return array $shipments
      */
-    public function getProductShipments($product)
+    public function getProductShipments($product, $id_product_attribute = null)
     {
 
     }
@@ -203,11 +210,26 @@ class OystProduct
      * @param ProductCore $product
      * return array $images
      */
-    public function getProductImages($product)
+    public function getProductImages($product, $id_product_attribute = null)
     {
+        // Init variables
         $images = array();
-        $product_images = $product->getImages($this->context->language->id);
 
+        // If combinations, get combinations images
+        if ($id_product_attribute > 0) {
+            $tmp = $product->getCombinationImages($this->context->language->id);
+            if (isset($tmp[$id_product_attribute])) {
+                $product_images = $tmp[$id_product_attribute];
+            }
+
+        }
+
+        // If no images retrieved, get images for product
+        if (!isset($product_images)) {
+            $product_images = $product->getImages($this->context->language->id);
+        }
+
+        // Build images array
         foreach ($product_images as $product_image) {
             $images[] = $this->context->link->getImageLink('product', $product_image['id_image'], 'thickbox_default');
         }
@@ -280,7 +302,8 @@ class OystProduct
                 'available_quantity' => $sku['quantity'],
                 'weight' => $sku['weight'],
                 'minimum_orderable_quantity' => $sku['minimal_quantity'],
-                'images' => array(),
+                'shipments' => $this->getProductShipments($product, $id_product_attribute),
+                'images' => $this->getProductImages($product, $id_product_attribute),
                 'ean' => $sku['ean13'],
                 'upc' => $sku['upc'],
             );
@@ -289,4 +312,3 @@ class OystProduct
         return $skus;
     }
 }
-

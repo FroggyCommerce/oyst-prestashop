@@ -45,11 +45,6 @@ class OystExportCatalogModuleCronController
     public function __construct($module)
     {
         $this->_module = $module;
-        $this->context = Context::getContext();
-        if (!isset($this->context->currency) || !Validate::isLoadedObject($this->context->currency)) {
-            $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-        }
-        $this->context->shop = new Shop($this->context->shop->id);
     }
 
     /**
@@ -59,7 +54,7 @@ class OystExportCatalogModuleCronController
     {
         // Get products
         $oyst_product = new OystProduct();
-        $result = $oyst_product->getProductsRequest($this->context->language->id);
+        $result = $oyst_product->getProductsRequest();
         while ($row = Db::getInstance()->nextRow($result)) {
             $product = $oyst_product->getProductData($row['id_product']);
             d($product);
