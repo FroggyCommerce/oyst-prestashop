@@ -72,10 +72,16 @@ class OystSDK
             'user' => $user,
             //'shopper_email' => $user['email'],
         );
-        return $this->_apiRequest($this->getApiPaymentEndpoint(), $data);
+        return $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
     }
 
-    private function _apiRequest($endpoint, $data)
+    public function productPostRequest($products)
+    {
+        $data = array('products' => $products, 'import_id' => 'uuid v1');
+        return $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
+    }
+
+    private function _apiPostRequest($endpoint, $data)
     {
         $data_string = json_encode($data);
 

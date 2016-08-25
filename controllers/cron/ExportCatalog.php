@@ -53,11 +53,22 @@ class OystExportCatalogModuleCronController
     public function run()
     {
         // Get products
+        $count = 1;
+        $products = array();
         $oyst_product = new OystProduct();
         $result = $oyst_product->getProductsRequest();
         while ($row = Db::getInstance()->nextRow($result)) {
-            $product = $oyst_product->getProductData($row['id_product']);
-            d($product);
+            $products[] = $oyst_product->getProductData($row['id_product']);
+
+            $oyst_api = new OystSDK();
+            $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_EXPORT_ENDPOINT'));
+            $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
+            $result = $oyst_api->productPostRequest($products);
+            d($result);
+
+            echo ($count++)." product(s)     \r";
         }
+
+        echo count($products)." products exported\n";
     }
 }

@@ -66,7 +66,7 @@ class OystProduct
             $tax_rules = TaxRule::getTaxRulesByGroupId($this->context->language->id, $tax_rules_group['id_tax_rules_group']);
             if (!empty($tax_rules)) {
                 foreach ($tax_rules as $tax_rule) {
-                    $tax_rule['rate'] = ceil($tax_rule['rate'] * 100);
+                    $tax_rule['rate'] = $this->ceilValue($tax_rule['rate']);
                     $this->tax_rates[$tax_rules_group['id_tax_rules_group']][$tax_rule['id_country']] = $tax_rule;
                 }
             }
@@ -171,8 +171,8 @@ class OystProduct
         list($main_category, $categories) = $this->getProductCategories($product);
 
         // Build product
-        return array(
-            'reference' => $product->id,
+        $product = array(
+            'reference' => 'ID '.$product->id,
             'merchant_reference' => $product->reference,
             'is_active' => ($product->active == 1 ? true : false),
             'is_materialized' => ($product->is_virtual == 1 ? true : false),
@@ -182,22 +182,22 @@ class OystProduct
             'description' => $product->description,
             'tags' => explode(', ', $product->getTags($this->context->language->id)),
             'amount_excluding_taxes' => array(
-                'value' => Product::getPriceStatic($product->id, false, null, 2, null, false, false),
+                'value' => $this->ceilValue(Product::getPriceStatic($product->id, false, null, 2, null, false, false)),
                 'currency' => $this->context->currency->iso_code,
             ),
             'amount_including_taxes' => array(
-                'value' => Product::getPriceStatic($product->id, true, null, 2, null, false, false),
+                'value' => $this->ceilValue(Product::getPriceStatic($product->id, true, null, 2, null, false, false)),
                 'currency' => $this->context->currency->iso_code,
             ),
             'sale_amount_excluding_taxes' => array(
-                'value' => Product::getPriceStatic($product->id, false, null, 2),
+                'value' => $this->ceilValue(Product::getPriceStatic($product->id, false, null, 2)),
                 'currency' => $this->context->currency->iso_code,
             ),
             'sale_amount_including_taxes' => array(
-                'value' => Product::getPriceStatic($product->id, true, null, 2),
+                'value' => $this->ceilValue(Product::getPriceStatic($product->id, true, null, 2)),
                 'currency' => $this->context->currency->iso_code,
             ),
-            'vat' => ($product->tax_rate * 100),
+            'vat' => $this->ceilValue($product->tax_rate),
             'meta' => array(
                 'title' => $product->meta_title,
                 'description' => $product->meta_description,
@@ -218,6 +218,8 @@ class OystProduct
             'informations' => $this->getProductInformations($product),
             'skus' => $skus,
         );
+
+        return $this->cleanData($product);
     }
 
     /**
@@ -317,7 +319,7 @@ class OystProduct
                             'method' => $carrier['instance']->name,
                             'quantity' => $i,
                             'shipment_amount' => array(
-                                'value' => $carrier['price_with_tax'],
+                                'value' => $this->ceilValue($carrier['price_with_tax']),
                                 'currency' => $this->context->currency->iso_code,
                             ),
                             'vat' => $shipping_tax_rate['rate'],
@@ -357,7 +359,7 @@ class OystProduct
         foreach ($product_images as $product_image) {
             $image_link = $this->context->link->getImageLink('product', $product_image['id_image'], 'thickbox_default');
             $image_link = str_replace(__PS_BASE_URI__, $this->context->shop->physical_uri, $image_link);
-            $images[] = $image_link;
+            $images[] = array('url' => $image_link);
         }
 
         return $images;
@@ -408,26 +410,26 @@ class OystProduct
         }
 
         foreach ($combinations as $id_product_attribute => $sku) {
-            $skus[] = array(
-                'reference' => $sku['reference'],
+            $skus[] = $this->cleanData(array(
+                'reference' => (!empty($sku['reference']) ? $sku['reference'] : 'IDPA '.$id_product_attribute),
                 'title' => $product->name.' - '.implode(' - ', $sku['attributes_values']),
                 'amount_excluding_taxes' => array(
-                    'value' => Product::getPriceStatic($product->id, false, $id_product_attribute, 2, null, false, false),
+                    'value' => $this->ceilValue(Product::getPriceStatic($product->id, false, $id_product_attribute, 2, null, false, false)),
                     'currency' => $this->context->currency->iso_code,
                 ),
                 'amount_including_taxes' => array(
-                    'value' => Product::getPriceStatic($product->id, true, $id_product_attribute, 2, null, false, false),
+                    'value' => $this->ceilValue(Product::getPriceStatic($product->id, true, $id_product_attribute, 2, null, false, false)),
                     'currency' => $this->context->currency->iso_code,
                 ),
                 'sale_amount_excluding_taxes' => array(
-                    'value' => Product::getPriceStatic($product->id, false, $id_product_attribute, 2),
+                    'value' => $this->ceilValue(Product::getPriceStatic($product->id, false, $id_product_attribute, 2)),
                     'currency' => $this->context->currency->iso_code,
                 ),
                 'sale_amount_including_taxes' => array(
-                    'value' => Product::getPriceStatic($product->id, true, $id_product_attribute, 2),
+                    'value' => $this->ceilValue(Product::getPriceStatic($product->id, true, $id_product_attribute, 2)),
                     'currency' => $this->context->currency->iso_code,
                 ),
-                'vat' => ($product->tax_rate * 100),
+                'vat' => $this->ceilValue($product->tax_rate),
                 'available_quantity' => $sku['quantity'],
                 'weight' => $sku['weight'],
                 'minimum_orderable_quantity' => $sku['minimal_quantity'],
@@ -435,9 +437,31 @@ class OystProduct
                 'images' => $this->getProductImages($product, $id_product_attribute),
                 'ean' => $sku['ean13'],
                 'upc' => $sku['upc'],
-            );
+            ));
         }
 
         return $skus;
+    }
+
+    public function ceilValue($value)
+    {
+        return ceil($value * 100);
+    }
+
+    public function cleanData($data)
+    {
+        // Unset empty value
+        foreach ($data as $field => $value) {
+            if (!is_array($value) && !is_integer($value)) {
+                if (empty($value) || !$value) {
+                    unset($data[$field]);
+                }
+            }
+            if (is_array($value) && empty($value)) {
+                unset($data[$field]);
+            }
+        }
+
+        return $data;
     }
 }
