@@ -79,7 +79,7 @@ class OystSDK
 
     public function productPostRequest($products)
     {
-        $data = array('products' => $products, 'import_id' => OystUUID::v3('1546058f-5a25-4334-85ae-e68f2a44bbaf', 'SomeRandomString'));
+        $data = array('products' => $products, 'import_id' => OystUUID::v4());
         return $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
     }
 
