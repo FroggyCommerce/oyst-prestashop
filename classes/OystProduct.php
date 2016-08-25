@@ -30,6 +30,11 @@ class OystProduct
 {
     public $context;
     public $languages;
+    public $countries;
+    public $carriers;
+    public $customer;
+    public $address;
+    public $tax_rates;
 
     /**
      * OystExportCatalogModuleCronController constructor.
@@ -47,6 +52,55 @@ class OystProduct
         $languages = Language::getLanguages(true);
         foreach ($languages as $language) {
             $this->languages[$language['iso_code']] = $language['id_lang'];
+        }
+
+        // Load countries
+        $this->countries = array(
+            new Country(Country::getByIso('FR'), $this->context->language->id),
+        );
+
+        // Load carriers
+        $this->carriers = Carrier::getCarriers($this->context->language->id);
+
+        // Load tax rates
+        $this->tax_rates = array();
+        foreach ($this->carriers as $carrier) {
+            $carrier['id_tax_rules_group'] = 1;
+            $tax_rules = TaxRule::getTaxRulesByGroupId($this->context->language->id, $carrier['id_tax_rules_group']);
+            if (!empty($tax_rules)) {
+                foreach ($tax_rules as $tax_rule) {
+                    $tax_rule['rate'] = ceil($tax_rule['rate'] * 100);
+                    $this->tax_rates[$carrier['id_tax_rules_group']][$tax_rule['id_country']] = $tax_rule;
+                }
+            }
+        }
+
+        // Load customer
+        $this->context->customer = new Customer(Configuration::get('FC_OYST_CUSTOMER_CONFIG'));
+        if (!Validate::isLoadedObject($this->context->customer)) {
+            $this->context->customer = new CustomerCore();
+            $this->context->customer->active = 1;
+            $this->context->customer->firstname = 'Oyst';
+            $this->context->customer->lastname = 'Oyst';
+            $this->context->customer->email = Configuration::get('PS_SHOP_EMAIL');
+            $this->context->customer->passwd = md5('Oyst');
+            $this->context->customer->add();
+            Configuration::updateValue('FC_OYST_CUSTOMER_CONFIG', $this->context->customer->id);
+        }
+
+        // Load address
+        $this->address = new Address(Configuration::get('FC_OYST_ADDRESS_CONFIG'));
+        if (!Validate::isLoadedObject($this->address)) {
+            $this->address = new Address();
+            $this->address->id_customer = $this->context->customer->id;
+            $this->address->id_country = Country::getByIso('FR');
+            $this->address->firstname = 'Oyst';
+            $this->address->lastname = 'Oyst';
+            $this->address->alias = 'Oyst';
+            $this->address->address1 = 'Oyst';
+            $this->address->city = 'Oyst';
+            $this->address->add();
+            Configuration::updateValue('FC_OYST_ADDRESS_CONFIG', $this->address->id);
         }
     }
 
@@ -104,8 +158,9 @@ class OystProduct
      */
     public function getProductData($id_product)
     {
-        // Load product and associated categories
+        // Load product, skus and associated categories
         $product = new Product($id_product, true, $this->context->language->id);
+        $skus = $this->getProductSkus($product);
         list($main_category, $categories) = $this->getProductCategories($product);
 
         // Build product
@@ -144,7 +199,7 @@ class OystProduct
             'categories' => $categories,
             'category' => $main_category,
             'manufacturer' => $product->manufacturer_name,
-            'shipments' => $this->getProductShipments($product),
+            'shipments' => (empty($skus) ? $this->getProductShipments($product) : array()),
             'available_quantity' => $product->quantity,
             'minimum_orderable_quantity' => $product->minimal_quantity,
             'outstock_message' => $product->available_later,
@@ -154,7 +209,7 @@ class OystProduct
             //'cpa' => 0,
             'images' => $this->getProductImages($product),
             'informations' => $this->getProductInformations($product),
-            'skus' => $this->getProductSkus($product),
+            'skus' => $skus,
         );
     }
 
@@ -202,7 +257,60 @@ class OystProduct
      */
     public function getProductShipments($product, $id_product_attribute = null)
     {
+        // Init
+        $shipments = array();
 
+        // Loard new cart and address
+        $cart = new CartCore();
+
+        // Loop on quantity
+        for ($i = 1; $i <= 10; $i++) {
+
+            // Loop on countries
+            foreach ($this->countries as $country) {
+
+                // Update address
+                if ($this->address->id_country != $country->id) {
+                    $this->address->id_country = $country->id;
+                    $this->address->update();
+                }
+
+                // Loadd on carriers
+                foreach ($this->carriers as $carrier) {
+
+                    // Update carrier and quantity
+                    $cart->id_customer = $this->context->customer->id;
+                    $cart->id_lang = $this->context->language->id;
+                    $cart->id_currency = $this->context->currency->id;
+                    $cart->id_address_delivery = $this->address->id;
+                    $cart->id_address_delivery = $this->address->id;
+                    $cart->id_carrier = (int)$carrier['id_carrier'];
+                    $cart->updateQty(1, $product->id, $id_product_attribute);
+                    $cart->update();
+
+                    // Get shipping rate
+                    $shipping_cost = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+                    $shipping_tax_rate = 0;
+                    if (isset($this->tax_rates[$carrier['id_tax_rules_group']][$this->address->id_country])) {
+                        $shipping_tax_rate = $this->tax_rates[$carrier['id_tax_rules_group']][$this->address->id_country];
+                    }
+
+                    // Build shipments
+                    $shipments[] = array(
+                        'area' => $country->name,
+                        'carrier' => $carrier['name'],
+                        'delay' => '10',
+                        'method' => $carrier['name'],
+                        'quantity' => $i,
+                        'shipment_amount' => array(
+                            'value' => $shipping_cost,
+                            'currency' => $this->context->currency->iso_code,
+                        ),
+                        'vat' => $shipping_tax_rate,
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -268,6 +376,9 @@ class OystProduct
         $skus = array();
         $combinations = array();
         $attribute_combinations = $product->getAttributeCombinations($this->context->language->id);
+        if (empty($attribute_combinations)) {
+            return array();
+        }
 
         foreach ($attribute_combinations as $row) {
             $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
