@@ -21,7 +21,8 @@
         "FC_OYST_API_EXPORT_ENDPOINT" : "http://catalog.staging.oyst.eu",
         "FC_OYST_EXPORT_CATS" : "",
         "FC_OYST_CUSTOMER_CONFIG" : "",
-        "FC_OYST_ADDRESS_CONFIG" : ""
+        "FC_OYST_ADDRESS_CONFIG" : "",
+        "FC_OYST_CART_CONFIG" : ""
     }
 }
 

@@ -78,7 +78,7 @@ class OystProduct
         // Load customer
         $this->context->customer = new Customer(Configuration::get('FC_OYST_CUSTOMER_CONFIG'));
         if (!Validate::isLoadedObject($this->context->customer)) {
-            $this->context->customer = new CustomerCore();
+            $this->context->customer = new Customer();
             $this->context->customer->active = 1;
             $this->context->customer->firstname = 'Oyst';
             $this->context->customer->lastname = 'Oyst';
@@ -101,6 +101,16 @@ class OystProduct
             $this->address->city = 'Oyst';
             $this->address->add();
             Configuration::updateValue('FC_OYST_ADDRESS_CONFIG', $this->address->id);
+        }
+
+        // Load cart
+        $this->context->cart = new Cart(Configuration::get('FC_OYST_CART_CONFIG'));
+        if (!Validate::isLoadedObject($this->context->cart)) {
+            $this->context->cart = new Cart();
+            $this->context->cart->id_currency = $this->context->currency->id;
+            $this->context->cart->id_customer = $this->context->customer->id;
+            $this->context->cart->add();
+            Configuration::updateValue('FC_OYST_CART_CONFIG', $this->context->cart->id);
         }
     }
 
@@ -260,9 +270,6 @@ class OystProduct
         // Init
         $shipments = array();
 
-        // Loard new cart and address
-        $cart = new CartCore();
-
         // Loop on quantity
         for ($i = 1; $i <= 10; $i++) {
 
@@ -279,17 +286,17 @@ class OystProduct
                 foreach ($this->carriers as $carrier) {
 
                     // Update carrier and quantity
-                    $cart->id_customer = $this->context->customer->id;
-                    $cart->id_lang = $this->context->language->id;
-                    $cart->id_currency = $this->context->currency->id;
-                    $cart->id_address_delivery = $this->address->id;
-                    $cart->id_address_delivery = $this->address->id;
-                    $cart->id_carrier = (int)$carrier['id_carrier'];
-                    $cart->updateQty(1, $product->id, $id_product_attribute);
-                    $cart->update();
+                    $this->context->cart->id_customer = $this->context->customer->id;
+                    $this->context->cart->id_lang = $this->context->language->id;
+                    $this->context->cart->id_currency = $this->context->currency->id;
+                    $this->context->cart->id_address_delivery = $this->address->id;
+                    $this->context->cart->id_address_delivery = $this->address->id;
+                    $this->context->cart->id_carrier = (int)$carrier['id_carrier'];
+                    $this->context->cart->updateQty(1, $product->id, $id_product_attribute);
+                    $this->context->cart->update();
 
                     // Get shipping rate
-                    $shipping_cost = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+                    $shipping_cost = $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
                     $shipping_tax_rate = 0;
                     if (isset($this->tax_rates[$carrier['id_tax_rules_group']][$this->address->id_country])) {
                         $shipping_tax_rate = $this->tax_rates[$carrier['id_tax_rules_group']][$this->address->id_country];
@@ -299,7 +306,7 @@ class OystProduct
                     $shipments[] = array(
                         'area' => $country->name,
                         'carrier' => $carrier['name'],
-                        'delay' => '10',
+                        'delay' => (int)$carrier['grade'],
                         'method' => $carrier['name'],
                         'quantity' => $i,
                         'shipment_amount' => array(
@@ -311,6 +318,8 @@ class OystProduct
                 }
             }
         }
+
+        return $shipments;
     }
 
     /**
