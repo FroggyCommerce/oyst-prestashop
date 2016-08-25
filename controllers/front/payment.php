@@ -59,6 +59,8 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         foreach ($addresses as $ka => $address) {
             $country = new Country($address->id_country, $this->context->language->id);
             $addresses_oyst[] = array(
+                'first_name' => $address->firstname,
+                'last_name' => $address->lastname,
                 'country' => $country->name,
                 'city' => $address->city,
                 'label' => $address->alias,
