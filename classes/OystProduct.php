@@ -59,18 +59,15 @@ class OystProduct
             new Country(Country::getByIso('FR'), $this->context->language->id),
         );
 
-        // Load carriers
-        $this->carriers = Carrier::getCarriers($this->context->language->id);
-
         // Load tax rates
+        $tax_rules_groups = TaxRulesGroup::getTaxRulesGroups();
         $this->tax_rates = array();
-        foreach ($this->carriers as $carrier) {
-            $carrier['id_tax_rules_group'] = 1;
-            $tax_rules = TaxRule::getTaxRulesByGroupId($this->context->language->id, $carrier['id_tax_rules_group']);
+        foreach ($tax_rules_groups as $tax_rules_group) {
+            $tax_rules = TaxRule::getTaxRulesByGroupId($this->context->language->id, $tax_rules_group['id_tax_rules_group']);
             if (!empty($tax_rules)) {
                 foreach ($tax_rules as $tax_rule) {
                     $tax_rule['rate'] = ceil($tax_rule['rate'] * 100);
-                    $this->tax_rates[$carrier['id_tax_rules_group']][$tax_rule['id_country']] = $tax_rule;
+                    $this->tax_rates[$tax_rules_group['id_tax_rules_group']][$tax_rule['id_country']] = $tax_rule;
                 }
             }
         }
@@ -270,6 +267,13 @@ class OystProduct
         // Init
         $shipments = array();
 
+        // Empty cart
+        foreach ($this->context->cart->getProducts() as $p) {
+            $this->context->cart->updateQty(- $p['cart_quantity'], $p['id_product'], $p['id_product_attribute']);
+            $this->context->cart->update();
+
+        }
+
         // Loop on quantity
         for ($i = 1; $i <= 10; $i++) {
 
@@ -282,39 +286,43 @@ class OystProduct
                     $this->address->update();
                 }
 
-                // Loadd on carriers
-                foreach ($this->carriers as $carrier) {
+                // Update country and quantity
+                $this->context->cart->id_customer = $this->context->customer->id;
+                $this->context->cart->id_lang = $this->context->language->id;
+                $this->context->cart->id_currency = $this->context->currency->id;
+                $this->context->cart->id_address_delivery = $this->address->id;
+                $this->context->cart->id_address_invoice = $this->address->id;
+                $this->context->cart->updateQty(1, $product->id, $id_product_attribute);
+                $this->context->cart->update();
 
-                    // Update carrier and quantity
-                    $this->context->cart->id_customer = $this->context->customer->id;
-                    $this->context->cart->id_lang = $this->context->language->id;
-                    $this->context->cart->id_currency = $this->context->currency->id;
-                    $this->context->cart->id_address_delivery = $this->address->id;
-                    $this->context->cart->id_address_delivery = $this->address->id;
-                    $this->context->cart->id_carrier = (int)$carrier['id_carrier'];
-                    $this->context->cart->updateQty(1, $product->id, $id_product_attribute);
-                    $this->context->cart->update();
+                // Get shipping cost for each carrier
+                $delivery_options = $this->context->cart->getDeliveryOptionList();
+                foreach ($delivery_options[$this->address->id] as $delivery_option) {
+                    foreach ($delivery_option['carrier_list'] as $id_carrier => $carrier) {
 
-                    // Get shipping rate
-                    $shipping_cost = $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
-                    $shipping_tax_rate = 0;
-                    if (isset($this->tax_rates[$carrier['id_tax_rules_group']][$this->address->id_country])) {
-                        $shipping_tax_rate = $this->tax_rates[$carrier['id_tax_rules_group']][$this->address->id_country];
+                        // Get id tax rules group
+                        $id_tax_rules_group = $carrier['instance']->id_tax_rules_group;
+
+                        // Get shipping rate
+                        $shipping_tax_rate = 0;
+                        if (isset($this->tax_rates[$id_tax_rules_group][$this->address->id_country])) {
+                            $shipping_tax_rate = $this->tax_rates[$id_tax_rules_group][$this->address->id_country];
+                        }
+
+                        // Build shipments
+                        $shipments[] = array(
+                            'area' => $country->name,
+                            'carrier' => $carrier['instance']->name,
+                            'delay' => (int)$carrier['instance']->grade,
+                            'method' => $carrier['instance']->name,
+                            'quantity' => $i,
+                            'shipment_amount' => array(
+                                'value' => $carrier['price_with_tax'],
+                                'currency' => $this->context->currency->iso_code,
+                            ),
+                            'vat' => $shipping_tax_rate['rate'],
+                        );
                     }
-
-                    // Build shipments
-                    $shipments[] = array(
-                        'area' => $country->name,
-                        'carrier' => $carrier['name'],
-                        'delay' => (int)$carrier['grade'],
-                        'method' => $carrier['name'],
-                        'quantity' => $i,
-                        'shipment_amount' => array(
-                            'value' => $shipping_cost,
-                            'currency' => $this->context->currency->iso_code,
-                        ),
-                        'vat' => $shipping_tax_rate,
-                    );
                 }
             }
         }
