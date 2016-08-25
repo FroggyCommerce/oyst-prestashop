@@ -19,6 +19,8 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
+require_once __DIR__.'/OystUUID.php';
+
 class OystSDK
 {
     private $_api_key;
@@ -77,7 +79,7 @@ class OystSDK
 
     public function productPostRequest($products)
     {
-        $data = array('products' => $products, 'import_id' => 'uuid v1');
+        $data = array('products' => $products, 'import_id' => OystUUID::v3('1546058f-5a25-4334-85ae-e68f2a44bbaf', 'SomeRandomString'));
         return $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
     }
 
