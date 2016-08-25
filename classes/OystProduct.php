@@ -169,6 +169,10 @@ class OystProduct
         $product = new Product($id_product, true, $this->context->language->id);
         $skus = $this->getProductSkus($product);
         list($main_category, $categories) = $this->getProductCategories($product);
+        $tags = $product->getTags($this->context->language->id);
+        if (!empty($tags)) {
+            $tags = explode(', ', $tags);
+        }
 
         // Build product
         $product = array(
@@ -180,7 +184,7 @@ class OystProduct
             'condition' => ($product->condition == 'used' ? 'reused' : $product->condition),
             'short_description' => $product->description_short,
             'description' => $product->description,
-            'tags' => explode(', ', $product->getTags($this->context->language->id)),
+            'tags' => $tags,
             'amount_excluding_taxes' => array(
                 'value' => $this->ceilValue(Product::getPriceStatic($product->id, false, null, 2, null, false, false)),
                 'currency' => $this->context->currency->iso_code,
