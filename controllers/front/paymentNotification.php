@@ -19,12 +19,14 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
-class OystReturnModuleFrontController extends ModuleFrontController
+class OystPaymentNotificationModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
 
     public function initContent()
     {
-        die('Return!');
+        $data = date('Y-m-d H:i:s')."\n".var_export($_GET, true)."\n".var_export($_POST, true)."\n\n";
+        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', $data);
+        die('OK!');
     }
 }

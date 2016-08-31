@@ -19,7 +19,7 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
-class OystCancelModuleFrontController extends ModuleFrontController
+class OystPaymentCancelModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
 
