@@ -13,6 +13,7 @@
     },
 
     "configurations" : {
+        "FC_OYST_HASH_KEY" : "",
         "FC_OYST_PAYMENT_FEATURE" : "0",
         "FC_OYST_CATALOG_EXPORT_FEATURE" : "0",
         "FC_OYST_IMPORT_ORDERS_FEATURE" : "0",

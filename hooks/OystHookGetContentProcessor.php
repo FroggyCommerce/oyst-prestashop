@@ -42,6 +42,13 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         'FC_OYST_EXPORT_CATS' => array('type' => 'multiple', 'field' => 'categoryBox'),
     );
 
+    public function init()
+    {
+        if (Configuration::get('FC_OYST_HASH_KEY') == '') {
+            Configuration::updateValue('FC_OYST_HASH_KEY', md5(rand()._RIJNDAEL_IV_).'-'.date('YmdHis'));
+        }
+    }
+
     public function saveModuleConfiguration()
     {
         if (Tools::isSubmit('submitOystConfiguration')) {
@@ -76,11 +83,14 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         foreach ($this->configurations as $conf => $format) {
             $assign[$conf] = Configuration::get($conf);
         }
+
         $assign['result'] = $this->configuration_result;
         $assign['ps_version'] = Tools::substr(_PS_VERSION_, 0, 3);
 
         $assign['allow_url_fopen_check'] = ini_get('allow_url_fopen');
         $assign['curl_check'] = function_exists('curl_version');
+
+        $assign['notification_url'] = $this->context->link->getModuleLink('oyst', 'notification').'?key='.Configuration::get('FC_OYST_HASH_KEY');
 
         if (Configuration::get('FC_OYST_PAYMENT_FEATURE') == 1) {
             $oyst_api = new OystSDK();
@@ -96,6 +106,7 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
 
     public function run()
     {
+        $this->init();
         $this->saveModuleConfiguration();
         return $this->displayModuleConfiguration();
     }

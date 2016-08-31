@@ -19,7 +19,7 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
-class OystPaymentNotificationModuleFrontController extends ModuleFrontController
+class OystNotificationModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
 
@@ -30,7 +30,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         }
 
         $data = date('Y-m-d H:i:s')."\n".var_export($_GET, true)."\n".var_export($_POST, true)."\n\n";
-        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', $data);
+        file_put_contents(dirname(__FILE__).'/../../logs/log-notification.txt', $data);
         die('OK!');
     }
 }

@@ -34,7 +34,7 @@ class OystPaymentModuleFrontController extends ModuleFrontController
     {
         // Build urls and amount
         $urls = array(
-            'notification' => $this->context->link->getModuleLink('oyst', 'paymentnotification'),
+            'notification' => $this->context->link->getModuleLink('oyst', 'paymentnotification').'?key='.Configuration::get('FC_OYST_HASH_KEY'),
             'cancel' => $this->context->link->getModuleLink('oyst', 'paymentcancel'),
             'error' => $this->context->link->getModuleLink('oyst', 'paymenterror'),
             'return' => $this->context->link->getModuleLink('oyst', 'paymentreturn'),

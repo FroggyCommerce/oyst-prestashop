@@ -109,6 +109,14 @@
                         </div>
                     </div>
 
+                    <div class="form-group clearfix">
+                        <label class="col-lg-3">{l s='Notification URL :' mod='oyst'}</label>
+                        <div class="col-lg-9">
+                            {$oyst.notification_url}
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>
