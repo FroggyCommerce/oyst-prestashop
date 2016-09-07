@@ -29,11 +29,15 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
             die('Secure key is invalid');
         }
 
-        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', "<!----Start notification-->", FILE_APPEND);
-        $data = date('Y-m-d H:i:s')."\n".var_export($_GET, true)."\n".var_export($_POST, true)."\n\n";
-        $data .= var_export(file_get_contents('php://input'), true);
+        $event_data = file_get_contents('php://input');
+        $event_data = json_decode($event_data, true);
+
+        $data = "<!----Start notification-->\n";
+        $data .= "Date:\n".date('Y-m-d H:i:s')."\n".var_export($_GET, true)."\n".var_export($_POST, true)."\n\n";
+        $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
+        $data .= "Content \n".var_export($event_data, true)."\n";
+        $data .= "<!----End notification-->\n";
         file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', $data, FILE_APPEND);
-        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', "<!----End notification-->", FILE_APPEND);
         die('OK!');
     }
 }
