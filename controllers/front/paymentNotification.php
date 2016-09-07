@@ -29,7 +29,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
             die('Secure key is invalid');
         }
 
-        $event_data = file_get_contents('php://input');
+        $event_data = substr(substr(file_get_contents('php://input'), 1), 0, -1);
         $event_data = json_decode($event_data, true);
 
         foreach ($event_data['notification_items'] as $notification_item) {
