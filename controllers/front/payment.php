@@ -34,10 +34,10 @@ class OystPaymentModuleFrontController extends ModuleFrontController
     {
         // Build urls and amount
         $urls = array(
-            'notification' => $this->context->link->getModuleLink('oyst', 'paymentnotification').'?key='.Configuration::get('FC_OYST_HASH_KEY'),
-            'cancel' => $this->context->link->getModuleLink('oyst', 'paymentcancel'),
-            'error' => $this->context->link->getModuleLink('oyst', 'paymenterror'),
-            'return' => $this->context->link->getModuleLink('oyst', 'paymentreturn'),
+            'notification' => $this->context->link->getModuleLink('oyst', 'paymentNotification').'?key='.Configuration::get('FC_OYST_HASH_KEY'),
+            'cancel' => $this->context->link->getModuleLink('oyst', 'paymentCancel'),
+            'error' => $this->context->link->getModuleLink('oyst', 'paymentError'),
+            'return' => $this->context->link->getModuleLink('oyst', 'paymentReturn'),
         );
         $currency = new CurrencyCore($this->context->cart->id_currency);
         $total_amount = (int)ceil($this->context->cart->getOrderTotal() * 100);
