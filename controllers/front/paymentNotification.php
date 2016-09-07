@@ -32,12 +32,33 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         $event_data = file_get_contents('php://input');
         $event_data = json_decode($event_data, true);
 
-        $data = "<!----Start notification-->\n";
-        $data .= "Date:\n".date('Y-m-d H:i:s')."\n".var_export($_GET, true)."\n".var_export($_POST, true)."\n\n";
-        $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
-        $data .= "Content \n".var_export($event_data, true)."\n";
-        $data .= "<!----End notification-->\n";
-        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', $data, FILE_APPEND);
+        foreach ($event_data['notification_items'] as $notification_item) {
+            $insert = array(
+                'id_order' => 0,
+                'id_cart' => (int)$notification_item['order_id'],
+                'payment_id' =>  pSQL($notification_item['payment_id']),
+                'event_code' =>  pSQL($notification_item['event_code']),
+                'event_data' => pSQL(json_encode($event_data)),
+                'date_event' => pSQL(substr(str_replace('T', '', $notification_item['event_date']), 0, 19)),
+                'date_add' => date('Y-m-d H:i:s'),
+            );
+            if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
+                $this->logNotification('Accepted');
+            }
+            $this->logNotification($insert);
+        }
+
         die('OK!');
     }
+
+    public function logNotification($debug) {
+        $data = "<!----Start notification-->\n";
+        $data .= "Date:\n".date('Y-m-d H:i:s')."\n";
+        $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
+        $data .= "Debug:\n".var_export($debug, true)."/n";
+        $data .= "<!----End notification-->\n\n";
+        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', $data, FILE_APPEND);
+    }
 }
+
+
