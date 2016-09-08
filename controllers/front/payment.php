@@ -36,8 +36,12 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         $cart_hash = md5(json_encode(array($this->context->cart->id, $this->context->cart->nbProducts())));
 
         // Build urls and amount
+        $glue = '&';
+        if (Configuration::get('PS_REWRITING_SETTINGS') == 1) {
+            $glue = '?';
+        }
         $urls = array(
-            'notification' => $this->context->link->getModuleLink('oyst', 'paymentNotification').'?key='.Configuration::get('FC_OYST_HASH_KEY').'&ch='.$cart_hash,
+            'notification' => $this->context->link->getModuleLink('oyst', 'paymentNotification').$glue.'key='.Configuration::get('FC_OYST_HASH_KEY').'&ch='.$cart_hash,
             'cancel' => $this->context->link->getModuleLink('oyst', 'paymentCancel'),
             'error' => $this->context->link->getModuleLink('oyst', 'paymentError'),
             'return' => $this->context->link->getModuleLink('oyst', 'paymentReturn'),
