@@ -17,3 +17,7 @@
  * @copyright 2013-2016 Froggy Commerce / 23Prod / Oyst
  * @license GNU GENERAL PUBLIC LICENSE
  *}
+
+<p>{l s='Your order %s is complete.' sprintf=$oyst.order_reference mod='oyst'}</p>
+<p>{l s='Payment transaction ID: %s' sprintf=$oyst.transaction_id mod='oyst'}</p><br /><br />
+<p>{l s='If you have questions, comments or concerns, please contact our' mod='oyst'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='expert customer support team. ' mod='oyst'}</a>.</p>
