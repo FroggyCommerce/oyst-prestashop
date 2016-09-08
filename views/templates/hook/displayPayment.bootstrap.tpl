@@ -43,7 +43,7 @@
         width: 14px;
     }
     p.payment_module a.oyst {
-        background: #fbfbfb url("{$oyst.module_dir}views/img/logo-credit-card.png") no-repeat scroll 15px 15px;
-        padding-left: 125px;
+        background: #fbfbfb url("{$oyst.module_dir}views/img/logo-horizontal-credit-card.png") no-repeat scroll 15px 15px;
+        padding-left: 390px;
     }
 </style>
