@@ -53,6 +53,31 @@ class Oyst extends FroggyPaymentModule
         $this->module_key = '';
     }
 
+    public function install()
+    {
+        $result = parent::install();
+
+        // Clear cache
+        CacheCore::clean('Module::getModuleIdByName_oyst');
+
+        // Set Oyst in first position
+        $id_hook = Hook::getIdByName('displayPayment');
+        $id_module = Module::getModuleIdByName('oyst');
+        $module = Module::getInstanceById($id_module);
+        if (Validate::isLoadedObject($module)) {
+            Db::getInstance()->execute('
+            UPDATE `'._DB_PREFIX_.'hook_module` SET `position`= position + 1
+            WHERE `id_hook` = '.(int)$id_hook);
+            Db::getInstance()->execute('
+            UPDATE `'._DB_PREFIX_.'hook_module` SET `position`= 1
+            WHERE `id_hook` = '.(int)$id_hook.' AND `id_module` = '.$id_module);
+            echo 'yeah';
+        }
+
+        return $result;
+    }
+
+
     /**
      * Configuration method
      * @return string $html
