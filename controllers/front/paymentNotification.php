@@ -43,9 +43,8 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 'date_add' => date('Y-m-d H:i:s'),
             );
             if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
-                $this->logNotification('Accepted');
+                $this->log('Accepted');
             }
-            $this->logNotification($insert);
         }
 
         die('OK!');
@@ -53,11 +52,14 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
 
     public function logNotification($debug) {
         $data = "<!----Start notification-->\n";
-        $data .= "Date:\n".date('Y-m-d H:i:s')."\n";
         $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
         $data .= "Debug:\n".var_export($debug, true)."/n";
-        $data .= "<!----End notification-->\n\n";
-        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', $data, FILE_APPEND);
+        $data .= "<!----End notification-->\n";
+        $this->log($data);
+    }
+
+    public function log($data) {
+        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', '['.date('Y-m-d H:i:s').'] '.$data."\n", FILE_APPEND);
     }
 }
 
