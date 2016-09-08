@@ -3,8 +3,16 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{oyst}prestashop>oyst_4952647bd504f1369bde6167a667609b'] = 'Oyst';
+$_MODULE['<{oyst}prestashop>paymentnotification_59a70e9e7e2b51dbde1027c899d1dd40'] = 'Le prix payé via Oyst ne correspond au montant du panier.';
+$_MODULE['<{oyst}prestashop>paymentnotification_572f9af7615560af2cba038cc1948287'] = 'Le panier a été modifé, veuillez réessayez.';
+$_MODULE['<{oyst}prestashop>paymentnotification_36ec50c0e914dd2fb48a1b27540512ce'] = 'Paiement accepté.';
+$_MODULE['<{oyst}prestashop>paymentnotification_a495948365afdff85b1f0c6e95fc36f7'] = 'Le paiement par Oyst a échouché.';
 $_MODULE['<{oyst}prestashop>error.bootstrap_19646c9b73b696aac0fba419ccc641fc'] = 'Une erreur est survenue avec le système de paiement Oyst. Veuillez contacter le support.';
 $_MODULE['<{oyst}prestashop>displaypayment.bootstrap_e77bb171c7ae55bba8b2ed869fadfb19'] = 'Payer par carte bancaire';
+$_MODULE['<{oyst}prestashop>displaypaymentreturn.bootstrap_e72f5db7df95fb92f69e9b5ac76f05fe'] = 'Votre commande %s a bien été enregistrée.';
+$_MODULE['<{oyst}prestashop>displaypaymentreturn.bootstrap_101ca5088a7684efc2a4f4548f8eb353'] = 'Identifiant de transaction : %s';
+$_MODULE['<{oyst}prestashop>displaypaymentreturn.bootstrap_ca7e41a658753c87973936d7ce2429a8'] = 'Si vous avez une question, un commentaire ou besoin d\'aide, n\'hésitez pas à contacter notre';
+$_MODULE['<{oyst}prestashop>displaypaymentreturn.bootstrap_dfe239de8c0b2453a8e8f7657a191d5d'] = 'service client.';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_4725c2b6db34f755b89b741c1d45bc71'] = 'La nouvelle configuration a été sauvegardée';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_9b0c85b97abeed9539a4a27522f07b86'] = 'Vous devez activer l\'option \"allow_url_fopen\" sur votre serveur pour utiliser ce module !';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_1e9a47f645f877ccb0802c12a409fcdf'] = 'Vous devez activer l\'extension \"cURL\" sur votre serveur pour utiliser ce module !';
