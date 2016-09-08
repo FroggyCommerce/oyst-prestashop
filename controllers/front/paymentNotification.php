@@ -94,13 +94,13 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
 
             if ($transaction['total_paid'] != $cart->getOrderTotal()) {
                 $payment_status = (int) Configuration::get('PS_OS_ERROR');
-                $message = $this->l('Price paid on Oyst is not the same that on PrestaShop.').'<br />';
+                $message = $this->module->l('Price paid on Oyst is not the same that on PrestaShop.').'<br />';
             } elseif ($url_hash != $cart_hash) {
                 $payment_status = (int) Configuration::get('PS_OS_ERROR');
-                $message = $this->l('Cart changed, please retry.').'<br />';
+                $message = $this->module->l('Cart changed, please retry.').'<br />';
             } else {
                 $payment_status = (int) Configuration::get('PS_OS_PAYMENT');
-                $message = $this->l('Payment accepted.').'<br />';
+                $message = $this->module->l('Payment accepted.').'<br />';
             }
 
 
