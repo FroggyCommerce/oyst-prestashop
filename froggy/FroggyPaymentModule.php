@@ -24,6 +24,13 @@
  */
 defined('_PS_VERSION_') || require dirname(__FILE__).'/index.php';
 
+if (!class_exists('FroggyHookProcessor', false)) {
+    require_once(dirname(__FILE__).'/FroggyHookProcessor.php');
+}
+if (!class_exists('FroggyDefinitionsModuleParser', false)) {
+    require_once(dirname(__FILE__).'/FroggyDefinitionsModuleParser.php');
+}
+
 class FroggyPaymentModule extends PaymentModule
 {
 
@@ -48,7 +55,7 @@ class FroggyPaymentModule extends PaymentModule
         $this->version = isset($definitions['version']) ? $definitions['version'] : 1;
         $this->need_instance = isset($definitions['need_instance']) ? $definitions['need_instance'] : 0;
 
-        $this->author = 'Froggy Commerce / 23Prod';
+        $this->author = 'Froggy Commerce';
 
         // If PS 1.6 or greater, we enable bootstrap
         if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
@@ -68,8 +75,12 @@ class FroggyPaymentModule extends PaymentModule
             require(dirname(__FILE__).'/FroggyBackward.php');
             require_once(dirname(__FILE__).'/FroggyOverride.php');
         }
-        require_once(dirname(__FILE__).'/FroggyHelperFormList.php');
-        require_once(dirname(__FILE__).'/FroggyHelperTreeCategories.php');
+        if (!class_exists('FroggyHelperFormList', false)) {
+            require_once(dirname(__FILE__).'/FroggyHelperFormList.php');
+        }
+        if (!class_exists('FroggyHelperTreeCategories', false)) {
+            require_once(dirname(__FILE__).'/FroggyHelperTreeCategories.php');
+        }
 
         // Define local path if not exists (1.4 compatibility)
         if (!isset($this->local_path)) {

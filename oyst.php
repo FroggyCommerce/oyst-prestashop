@@ -34,7 +34,7 @@ if (!class_exists('FroggyPaymentModule', false)) {
     require_once _PS_MODULE_DIR_.'/oyst/froggy/FroggyPaymentModule.php';
 }
 
-class Oyst extends FroggyModule
+class Oyst extends FroggyPaymentModule
 {
     /**
      * Constructor
@@ -42,7 +42,7 @@ class Oyst extends FroggyModule
     public function __construct()
     {
         $this->name = 'oyst';
-        $this->version = '0.1.0';
+        $this->version = '0.2.0';
         $this->author = 'Froggy Commerce / 23Prod';
         $this->tab = 'payments_gateways';
 
