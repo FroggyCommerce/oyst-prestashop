@@ -45,7 +45,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
             if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
                 $this->log('Notification received');
                 try {
-                    $this->convertCartToOrder($notification_item);
+                    $this->convertCartToOrder($notification_item, Tools::getValue('ch'));
                 } catch (Exception $e) {
                     $this->log($e->getMessage());
                 }
@@ -56,16 +56,13 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         die(json_encode(array('result' => 'ok')));
     }
 
-    public function convertCartToOrder($payment_notification)
+    public function convertCartToOrder($payment_notification, $url_cart_hash)
     {
         // Load cart
         $cart = new Cart((int)$payment_notification['order_id']);
 
-        // Build hash and load cart data
-        // @Todo add cart hash in payment notification URL
-        $cart_details = $cart->getSummaryDetails(null, true);
-        $cart_hash = sha1(serialize($cart->nbProducts()));
-        $url_hash = $cart_hash;
+        // Build cart hash
+        $cart_hash = md5(json_encode(array($cart->id, $cart->nbProducts())));
 
         // Load data in context
         $this->context->cart = $cart;
@@ -82,6 +79,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
 
         if ($payment_notification['success'] == 'true') {
 
+            // Build transation array
             $message = null;
             $transaction = array(
                 'id_transaction' => pSQL($payment_notification['payment_id']),
@@ -92,10 +90,11 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 'payment_status' => pSQL($payment_notification['success']),
             );
 
+            // Select matching payment status
             if ($transaction['total_paid'] != $cart->getOrderTotal()) {
                 $payment_status = (int) Configuration::get('PS_OS_ERROR');
                 $message = $this->module->l('Price paid on Oyst is not the same that on PrestaShop.').'<br />';
-            } elseif ($url_hash != $cart_hash) {
+            } elseif ($url_cart_hash != $cart_hash) {
                 $payment_status = (int) Configuration::get('PS_OS_ERROR');
                 $message = $this->module->l('Cart changed, please retry.').'<br />';
             } else {
@@ -103,7 +102,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 $message = $this->module->l('Payment accepted.').'<br />';
             }
 
-
+            // Set shop
             if (_PS_VERSION_ < '1.5') {
                 $shop = null;
             } else {
@@ -111,8 +110,13 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 $shop = new Shop($shop_id);
             }
 
-            $this->module->validateOrder($cart->id, $payment_status, $transaction['total_paid'], $this->module->displayName, $message, $transaction, $cart->id_currency, false, $this->context->customer->secure_key, $shop);
+        } else {
+            $payment_status = (int) Configuration::get('PS_OS_ERROR');
+            $message = $this->module->l('Oyst payment failed.').'<br />';
         }
+
+        // Validate order
+        $this->module->validateOrder($cart->id, $payment_status, $transaction['total_paid'], $this->module->displayName, $message, $transaction, $cart->id_currency, false, $this->context->customer->secure_key, $shop);
     }
 
     public function logNotification($debug) {
