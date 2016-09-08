@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `@PREFIX@oyst_order`;
