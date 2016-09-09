@@ -34,6 +34,20 @@ if (!class_exists('FroggyPaymentModule', false)) {
     require_once _PS_MODULE_DIR_.'/oyst/froggy/FroggyPaymentModule.php';
 }
 
+/*
+ * Include Oyst SDK
+ */
+if (!class_exists('OystSDK', false)) {
+    require_once _PS_MODULE_DIR_.'/oyst/classes/OystSDK.php';
+}
+
+/*
+ * Include Oyst Product Class
+ */
+if (!class_exists('OystProduct', false)) {
+    require_once _PS_MODULE_DIR_.'/oyst/classes/OystProduct.php';
+}
+
 class Oyst extends FroggyPaymentModule
 {
     /**

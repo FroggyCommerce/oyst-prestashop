@@ -19,14 +19,40 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
+
+
 class OystNotificationModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
 
     public function initContent()
     {
+        // Check secure key
         if (Tools::getValue('key') != Configuration::get('FC_OYST_HASH_KEY')) {
             die('Secure key is invalid');
+        }
+
+        // Decode data
+        $event_data = trim(str_replace("'", '', file_get_contents('php://input')));
+        $event_data = json_decode($event_data, true);
+
+        // If products import event
+        if (isset($event_data['event']) && $event_data['event'] == 'products.import') {
+
+            // Load import ID
+            $import_id = $event_data['data']['import_id'];
+
+            // Get number of products
+            $oyst_product = new OystProduct();
+            $nb_products = $oyst_product->getProductsRequest(true);
+
+            // Send catalog and log result
+            $result = $oyst_product->sendCatalog();
+            $this->module->log($result);
+
+            // Return result
+            $return = array('importId' => $import_id, 'totalCount' => $nb_products, 'remaining' => 0);
+            die(json_encode($return));
         }
 
         $data = var_export($_GET, true)."\n".var_export($_POST, true)."\n";

@@ -111,14 +111,43 @@ class OystProduct
         }
     }
 
+
     /**
      * Make products MySQL request
-     * @param integer $id_lang
+     * @param integer $start
+     * @param integer $limit
+     * @return array API result
+     */
+    public function sendCatalog($start = 0, $limit = 0)
+    {
+        // Init
+        $count = 1;
+        $products = array();
+
+        // Get products
+        $result = $this->getProductsRequest(false, $start, $limit);
+        while ($row = Db::getInstance()->nextRow($result)) {
+            $products[] = $this->getProductData($row['id_product']);
+            if (php_sapi_name() == "cli") {
+                echo ($count++)." product(s)     \r";
+            }
+        }
+
+        // Export products
+        $oyst_api = new OystSDK();
+        $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_EXPORT_ENDPOINT'));
+        $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
+        return $oyst_api->productPostRequest($products);
+    }
+
+    /**
+     * Make products MySQL request
+     * @param boolean $count
      * @param integer $start
      * @param integer $limit
      * @return mysql ressource
      */
-    public function getProductsRequest($start = 0, $limit = 0)
+    public function getProductsRequest($count = false, $start = 0, $limit = 0)
     {
         // Retrieve context
         $context = Context::getContext();
@@ -140,7 +169,7 @@ class OystProduct
         }
 
         // SQL request
-        $sql = 'SELECT p.`id_product`
+        $sql = 'SELECT '.($count ? 'COUNT(' : '').'p.`id_product`'.($count ? ')' : '').'
                 FROM `'._DB_PREFIX_.'product` p
                 '.Shop::addSqlAssociation('product', 'p').'
                 WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
@@ -152,6 +181,9 @@ class OystProduct
                 GROUP BY product_shop.id_product '.$limitSQL;
 
         // Return query
+        if ($count) {
+            return Db::getInstance()->getValue($sql);
+        }
         return Db::getInstance()->query($sql);
     }
 

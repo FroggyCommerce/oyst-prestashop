@@ -19,6 +19,13 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
+/*
+ * Security
+ */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class OystHookDisplayPaymentReturnProcessor extends FroggyHookProcessor
 {
     public function run()

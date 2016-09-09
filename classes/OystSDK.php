@@ -19,6 +19,13 @@
  * @license GNU GENERAL PUBLIC LICENSE
  */
 
+/*
+ * Security
+ */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class OystSDK
 {
     private $_api_key;
