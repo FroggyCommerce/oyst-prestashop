@@ -32,6 +32,10 @@ class OystNotificationModuleFrontController extends ModuleFrontController
             die('Secure key is invalid');
         }
 
+        // Log notifications
+        $this->module->log('General notification received');
+        $this->module->logNotification('General', $_GET);
+
         // Decode data
         $event_data = trim(str_replace("'", '', file_get_contents('php://input')));
         $event_data = json_decode($event_data, true);
@@ -58,7 +62,6 @@ class OystNotificationModuleFrontController extends ModuleFrontController
             die(json_encode($return));
         }
 
-        $this->module->logNotification('General', $_GET);
         die('OK!');
     }
 }
