@@ -113,7 +113,7 @@ class OystProduct
 
 
     /**
-     * Make products MySQL request
+     * Send catalog to Oyst
      * @param integer $start
      * @param integer $limit
      * @return array API result

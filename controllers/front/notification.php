@@ -40,28 +40,43 @@ class OystNotificationModuleFrontController extends ModuleFrontController
         $event_data = trim(str_replace("'", '', file_get_contents('php://input')));
         $event_data = json_decode($event_data, true);
 
-        // If products import event
+        // If products import event or new order
         if (isset($event_data['event']) && $event_data['event'] == 'products.import') {
-
-            // Load import ID
-            $import_id = $event_data['data']['import_id'];
-
-            // Get number of products
-            $oyst_product = new OystProduct();
-            $nb_products = $oyst_product->getProductsRequest(true);
-
-            // Send catalog
-            $result = $oyst_product->sendCatalog();
-
-            // Log result
-            $this->module->log('Catalog sent');
-            $this->module->log($result);
-
-            // Return result
-            $return = array('importId' => $import_id, 'totalCount' => $nb_products, 'remaining' => 0);
-            die(json_encode($return));
+            $this->eventProductsExport($event_data);
+        } else if (isset($event_data['event']) && $event_data['event'] == 'notification.newOrder') {
+            $this->eventOrderImport($event_data);
         }
 
         die('OK!');
+    }
+
+    /**
+     * @param $event_data
+     */
+    public function eventProductsExport($event_data)
+    {
+        // Get import ID
+        $import_id = $event_data['data']['import_id'];
+
+        // Get number of products
+        $oyst_product = new OystProduct();
+        $nb_products = $oyst_product->getProductsRequest(true);
+
+        // Send catalog
+        $result = $oyst_product->sendCatalog();
+
+        // Log result
+        $this->module->log('Catalog sent');
+        $this->module->log($result);
+
+        // Return result
+        $return = array('importId' => $import_id, 'totalCount' => $nb_products, 'remaining' => 0);
+        die(json_encode($return));
+    }
+
+    public function eventOrderImport($event_data)
+    {
+        // Get order ID
+        $order_id = $event_data['data']['order_id'];
     }
 }
