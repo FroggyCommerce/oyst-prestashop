@@ -169,7 +169,7 @@ class OystProduct
         }
 
         // SQL request
-        $sql = 'SELECT '.($count ? 'COUNT(' : '').'p.`id_product`'.($count ? ')' : '').'
+        $sql = 'SELECT '.($count ? 'COUNT(DISTINCT(' : '').'p.`id_product`'.($count ? '))' : '').'
                 FROM `'._DB_PREFIX_.'product` p
                 '.Shop::addSqlAssociation('product', 'p').'
                 WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
@@ -178,7 +178,8 @@ class OystProduct
                     p.`active` = 1 OR
                     p.`date_upd` > \''.pSQL(date('Y-m-d', strtotime('-7 days'))).'\'
                 ) '.$where.'
-                GROUP BY product_shop.id_product '.$limitSQL;
+                '.(!$count ? 'GROUP BY product_shop.id_product' : '').'
+                '.$limitSQL;
 
         // Return query
         if ($count) {
