@@ -46,8 +46,11 @@ class OystNotificationModuleFrontController extends ModuleFrontController
             $oyst_product = new OystProduct();
             $nb_products = $oyst_product->getProductsRequest(true);
 
-            // Send catalog and log result
+            // Send catalog
             $result = $oyst_product->sendCatalog();
+
+            // Log result
+            $this->module->log('Catalog sent');
             $this->module->log($result);
 
             // Return result

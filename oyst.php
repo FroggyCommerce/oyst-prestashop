@@ -48,6 +48,11 @@ if (!class_exists('OystProduct', false)) {
     require_once _PS_MODULE_DIR_.'/oyst/classes/OystProduct.php';
 }
 
+define('_PS_OYST_DEBUG_', 1);
+
+/**
+ * Class Oyst
+ */
 class Oyst extends FroggyPaymentModule
 {
     /**
@@ -125,6 +130,9 @@ class Oyst extends FroggyPaymentModule
     }
 
     public function log($data) {
+        if (_PS_OYST_DEBUG_ != 1) {
+            return '';
+        }
         if (is_array($data)) {
             $data = var_export($data, true);
         }
