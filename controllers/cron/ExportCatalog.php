@@ -51,5 +51,6 @@ class OystExportCatalogModuleCronController
 
         // Display result
         print_r($result);
+        echo "\n";
     }
 }
