@@ -87,10 +87,34 @@ class Oyst extends FroggyPaymentModule
         return $this->hookGetContent();
     }
 
+    /**
+     * Export catalog method
+     */
     public function exportCatalog()
     {
         require_once _PS_MODULE_DIR_.'/oyst/controllers/cron/ExportCatalog.php';
         $controller = new OystExportCatalogModuleCronController($this);
         $controller->run();
     }
+
+
+    /**
+     * Logging methods
+     */
+
+    public function logNotification($name = '', $debug) {
+        $data = "<!---- Start notification '.$name.' -->\n";
+        $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
+        $data .= "Debug:\n".var_export($debug, true)."/n";
+        $data .= "<!---- End notification -->\n";
+        $this->log($data);
+    }
+
+    public function log($data) {
+        if (is_array($data)) {
+            $data = var_export($data, true);
+        }
+        file_put_contents(dirname(__FILE__).'/logs/log-notification.txt', '['.date('Y-m-d H:i:s').'] '.$data."\n", FILE_APPEND);
+    }
+
 }

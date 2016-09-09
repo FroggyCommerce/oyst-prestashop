@@ -43,11 +43,11 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 'date_add' => date('Y-m-d H:i:s'),
             );
             if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
-                $this->log('Notification received');
+                $this->module->log('Notification received');
                 try {
                     $this->convertCartToOrder($notification_item, Tools::getValue('ch'));
                 } catch (Exception $e) {
-                    $this->log($e->getMessage());
+                    $this->module->log($e->getMessage());
                 }
 
             }
@@ -118,22 +118,6 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         // Validate order
         $this->module->validateOrder($cart->id, $payment_status, $transaction['total_paid'], $this->module->displayName, $message, $transaction, $cart->id_currency, false, $this->context->customer->secure_key, $shop);
     }
-
-    public function logNotification($debug) {
-        $data = "<!----Start notification-->\n";
-        $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
-        $data .= "Debug:\n".var_export($debug, true)."/n";
-        $data .= "<!----End notification-->\n";
-        $this->log($data);
-    }
-
-    public function log($data) {
-        if (is_array($data)) {
-            $data = var_export($data, true);
-        }
-        file_put_contents(dirname(__FILE__).'/../../logs/log-payment.txt', '['.date('Y-m-d H:i:s').'] '.$data."\n", FILE_APPEND);
-    }
-
 }
 
 

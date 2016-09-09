@@ -29,8 +29,8 @@ class OystNotificationModuleFrontController extends ModuleFrontController
             die('Secure key is invalid');
         }
 
-        $data = date('Y-m-d H:i:s')."\n".var_export($_GET, true)."\n".var_export($_POST, true)."\n\n";
-        file_put_contents(dirname(__FILE__).'/../../logs/log-notification.txt', $data, FILE_APPEND);
+        $data = var_export($_GET, true)."\n".var_export($_POST, true)."\n";
+        $this->module->logNotification('classic', $data);
         die('OK!');
     }
 }
