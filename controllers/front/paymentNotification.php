@@ -43,7 +43,8 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 'date_add' => date('Y-m-d H:i:s'),
             );
             if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
-                $this->module->log('Notification received');
+                $this->module->log('Payment notification received');
+                $this->module->logNotification('Payment', $_GET);
                 try {
                     $this->convertCartToOrder($notification_item, Tools::getValue('ch'));
                 } catch (Exception $e) {

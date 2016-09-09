@@ -58,8 +58,7 @@ class OystNotificationModuleFrontController extends ModuleFrontController
             die(json_encode($return));
         }
 
-        $data = var_export($_GET, true)."\n".var_export($_POST, true)."\n";
-        $this->module->logNotification('classic', $data);
+        $this->module->logNotification('General', $_GET);
         die('OK!');
     }
 }
