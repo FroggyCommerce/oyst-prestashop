@@ -18,8 +18,13 @@
  * @license GNU GENERAL PUBLIC LICENSE
  *}
 
-<div class="alert alert-success">
-<p>{l s='Your order %s is complete.' sprintf=$oyst.order_reference mod='oyst'}</p>
-<p>{l s='Payment transaction ID: %s' sprintf=$oyst.transaction_id mod='oyst'}</p><br /><br />
-<p>{l s='If you have questions, comments or concerns, please contact our' mod='oyst'} <a style="color:white" href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='expert customer support team. ' mod='oyst'}</a>.</p>
+<div id="oyst-confirmation">
+    <div class="alert alert-success">
+        <div class="container-icon-success" style="text-align: center; height: 80px; line-height: 80px;">
+            <i class="success-confirm-payement"></i>
+        </div>
+        <p>{l s='Your order %s is complete.' sprintf=$oyst.order_reference mod='oyst'}</p>
+        <p>{l s='Payment transaction ID: %s' sprintf=$oyst.transaction_id mod='oyst'}</p><br><br>
+        <p>{l s='If you have questions, comments or concerns, please contact our' mod='oyst'} <a style="color:white" href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='expert customer support team. ' mod='oyst'}</a>.</p>
+    </div>
 </div>
