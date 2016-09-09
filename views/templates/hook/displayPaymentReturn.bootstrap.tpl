@@ -32,6 +32,7 @@
 <style>
     #oyst-confirmation .alert.alert-success:before {
         content: "";
+        padding-right: 0px!important;
     }
     #oyst-confirmation .alert.alert-success > p {
         font-size: 14px;
