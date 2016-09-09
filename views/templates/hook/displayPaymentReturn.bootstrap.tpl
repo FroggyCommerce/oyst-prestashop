@@ -20,7 +20,7 @@
 
 <div id="oyst-confirmation">
     <div class="alert alert-success">
-        <div class="container-icon-success" style="text-align: center; height: 80px; line-height: 80px;">
+        <div class="container-icon-success">
             <i class="success-confirm-payment"></i>
         </div>
         <p>{l s='Your order %s is complete.' sprintf=$oyst.order_reference mod='oyst'}</p>
@@ -30,8 +30,16 @@
 </div>
 
 <style>
+    #oyst-confirmation .alert.alert-success:before {
+        content: "";
+    }
     #oyst-confirmation .alert.alert-success > p {
         font-size: 14px;
+    }
+    #oyst-confirmation .alert.alert-success .container-icon-success {
+        text-align: center;
+        height: 80px;
+        line-height: 80px;
     }
     .success-confirm-payment:before {
         content: "";
