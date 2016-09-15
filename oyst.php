@@ -125,7 +125,8 @@ class Oyst extends FroggyPaymentModule
      * Logging methods
      */
 
-    public function logNotification($name = '', $debug) {
+    public function logNotification($name, $debug)
+    {
         $data = "<!---- Start notification ".$name." -->\n";
         $data .= "Response:\n".var_export(file_get_contents('php://input'), true)."/n";
         $data .= "Debug:\n".var_export($debug, true)."/n";
@@ -133,7 +134,8 @@ class Oyst extends FroggyPaymentModule
         $this->log($data);
     }
 
-    public function log($data) {
+    public function log($data)
+    {
         if (_PS_OYST_DEBUG_ != 1) {
             return '';
         }
@@ -142,5 +144,4 @@ class Oyst extends FroggyPaymentModule
         }
         file_put_contents(dirname(__FILE__).'/logs/log-notification.txt', '['.date('Y-m-d H:i:s').'] '.$data."\n", FILE_APPEND);
     }
-
 }

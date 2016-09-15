@@ -27,13 +27,11 @@ $module_path = dirname(__FILE__).'/oyst.php';
 define('_PS_ADMIN_DIR_', getcwd());
 
 // Keep going if config script is found
-if (file_exists($config_path))
-{
+if (file_exists($config_path)) {
     include($config_path);
     include($module_path);
     $oyst = new Oyst();
     $oyst->exportCatalog();
-}
-else
+} else {
     die('ERROR');
-
+}

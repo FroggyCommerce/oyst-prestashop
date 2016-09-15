@@ -60,7 +60,7 @@ class OystSDK
         return false;
     }
 
-    public function paymentRequest($amount, $currency, $id_cart, $urls = array(), $is_3d, $user)
+    public function paymentRequest($amount, $currency, $id_cart, $urls, $is_3d, $user)
     {
         $data = array(
             'amount' => array(

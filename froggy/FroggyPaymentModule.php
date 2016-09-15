@@ -565,4 +565,3 @@ class FroggyPaymentModule extends PaymentModule
         return $link;
     }
 }
-

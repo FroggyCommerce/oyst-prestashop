@@ -154,17 +154,19 @@ class OystProduct
 
         // Init
         $limitSQL = '';
-        if ((int)$start > 0 && (int)$limit > 0)
+        if ((int)$start > 0 && (int)$limit > 0) {
             $limitSQL = ' LIMIT '.(int)$start.','.(int)$limit;
+        }
 
         $where = '';
-        if (Configuration::get('OYST_EXPORT_ALL') == 'no')
-        {
+        if (Configuration::get('OYST_EXPORT_ALL') == 'no') {
             $categories = json_decode(Configuration::get('OYST_EXPORT_CATEGORIES'), true);
-            if (empty($categories))
+            if (empty($categories)) {
                 $categories[] = 0;
-            foreach ($categories as $kc => $vc)
+            }
+            foreach ($categories as $kc => $vc) {
                 $categories[(int)$kc] = (int)$vc;
+            }
             $where = ' AND p.`id_product` IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.implode(',', $categories).'))';
         }
 
