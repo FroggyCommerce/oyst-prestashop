@@ -40,7 +40,7 @@ class OystPaymentModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         // Build hash
-        $cart_hash = md5(json_encode(array($this->context->cart->id, $this->context->cart->nbProducts())));
+        $cart_hash = md5(Tools::jsonEncode(array($this->context->cart->id, $this->context->cart->nbProducts())));
 
         // Build urls and amount
         $glue = '&';
@@ -98,21 +98,19 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         $result = $oyst_api->paymentRequest($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true, $user);
 
         // Redirect to payment
-        $result = json_decode($result, true);
+        $result = Tools::jsonDecode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
-            header('location:'.$result['url']);
-            exit;
+            Tools::redirect($result['url']);
         }
 
         // Redirect to error page, save data in
-        $this->context->cookie->oyst_debug = json_encode(
+        $this->context->cookie->oyst_debug = Tools::jsonEncode(
             array_merge(
                 $user,
                 $result,
                 array($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true)
             )
         );
-        header('location:'.$urls['error']);
-        exit;
+        Tools::redirect($urls['error']);
     }
 }

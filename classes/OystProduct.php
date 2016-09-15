@@ -160,7 +160,7 @@ class OystProduct
 
         $where = '';
         if (Configuration::get('OYST_EXPORT_ALL') == 'no') {
-            $categories = json_decode(Configuration::get('OYST_EXPORT_CATEGORIES'), true);
+            $categories = Tools::jsonDecode(Configuration::get('OYST_EXPORT_CATEGORIES'), true);
             if (empty($categories)) {
                 $categories[] = 0;
             }
@@ -396,7 +396,7 @@ class OystProduct
 
         // Build images array
         foreach ($product_images as $product_image) {
-            $image_link = $this->context->link->getImageLink('product', $product_image['id_image'], 'thickbox_default');
+            $image_link = $this->context->link->getImageLink('product', $product_image['id_image'], 'thickbox'.'_'.'default');
             $image_link = str_replace(__PS_BASE_URI__, $this->context->shop->physical_uri, $image_link);
             $images[] = array('url' => $image_link);
         }

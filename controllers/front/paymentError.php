@@ -33,7 +33,7 @@ class OystPaymentErrorModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         parent::initContent();
-        $this->context->smarty->assign('oyst_debug', json_decode($this->context->cookie->oyst_debug, true));
+        $this->context->smarty->assign('oyst_debug', Tools::jsonDecode($this->context->cookie->oyst_debug, true));
         $this->setTemplate('error'.(version_compare(_PS_VERSION_, '1.6.0') ? '.bootstrap' : '').'.tpl');
     }
 }

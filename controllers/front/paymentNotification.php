@@ -36,8 +36,8 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
             die('Secure key is invalid');
         }
 
-        $event_data = trim(str_replace("'", '', file_get_contents('php://input')));
-        $event_data = json_decode($event_data, true);
+        $event_data = trim(str_replace("'", '', Tools::file_get_contents('php://input')));
+        $event_data = Tools::jsonDecode($event_data, true);
 
         foreach ($event_data['notification_items'] as $notification_item) {
             $insert = array(
@@ -45,8 +45,8 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 'id_cart' => (int)$notification_item['order_id'],
                 'payment_id' =>  pSQL($notification_item['payment_id']),
                 'event_code' =>  pSQL($notification_item['event_code']),
-                'event_data' => pSQL(json_encode($event_data)),
-                'date_event' => pSQL(substr(str_replace('T', '', $notification_item['event_date']), 0, 19)),
+                'event_data' => pSQL(Tools::jsonEncode($event_data)),
+                'date_event' => pSQL(Tools::substr(str_replace('T', '', $notification_item['event_date']), 0, 19)),
                 'date_add' => date('Y-m-d H:i:s'),
             );
             if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
@@ -61,7 +61,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
             }
         }
 
-        die(json_encode(array('result' => 'ok')));
+        die(Tools::jsonEncode(array('result' => 'ok')));
     }
 
     public function convertCartToOrder($payment_notification, $url_cart_hash)
@@ -70,7 +70,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         $cart = new Cart((int)$payment_notification['order_id']);
 
         // Build cart hash
-        $cart_hash = md5(json_encode(array($cart->id, $cart->nbProducts())));
+        $cart_hash = md5(Tools::jsonEncode(array($cart->id, $cart->nbProducts())));
 
         // Load data in context
         $this->context->cart = $cart;
@@ -94,7 +94,7 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
                 'transaction_id' => pSQL($payment_notification['payment_id']),
                 'total_paid' => (float)($payment_notification['amount']['value'] / 100),
                 'currency' => pSQL($payment_notification['amount']['currency']),
-                'payment_date' => pSQL(substr(str_replace('T', '', $payment_notification['event_date']), 0, 19)),
+                'payment_date' => pSQL(Tools::substr(str_replace('T', '', $payment_notification['event_date']), 0, 19)),
                 'payment_status' => pSQL($payment_notification['success']),
             );
 

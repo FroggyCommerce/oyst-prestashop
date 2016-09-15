@@ -52,7 +52,7 @@ class OystSDK
         );
 
         $result = $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
-        $result = json_decode($result, true);
+        $result = Tools::jsonDecode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
             return true;
         }
@@ -89,7 +89,7 @@ class OystSDK
 
     private function _apiPostRequest($endpoint, $data)
     {
-        $data_string = json_encode($data);
+        $data_string = Tools::jsonEncode($data);
 
         $ch = curl_init($endpoint);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -97,7 +97,7 @@ class OystSDK
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Content-Length: '.strlen($data_string),
+            'Content-Length: '.Tools::strlen($data_string),
             'User-Agent: OystPrestashop/'._PS_OYST_VERSION_.' (Prestashop '._PS_VERSION_.')',
             'Authorization: bearer '.$this->getApiKey(),
         ]);

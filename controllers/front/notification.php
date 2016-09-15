@@ -42,8 +42,8 @@ class OystNotificationModuleFrontController extends ModuleFrontController
         $this->module->logNotification('General', $_GET);
 
         // Decode data
-        $event_data = trim(str_replace("'", '', file_get_contents('php://input')));
-        $event_data = json_decode($event_data, true);
+        $event_data = trim(str_replace("'", '', Tools::file_get_contents('php://input')));
+        $event_data = Tools::jsonDecode($event_data, true);
 
         // If products import event or new order
         if (isset($event_data['event']) && $event_data['event'] == 'products.import') {
@@ -76,7 +76,7 @@ class OystNotificationModuleFrontController extends ModuleFrontController
 
         // Return result
         $return = array('importId' => $import_id, 'totalCount' => $nb_products, 'remaining' => 0);
-        die(json_encode($return));
+        die(Tools::jsonEncode($return));
     }
 
     public function eventOrderImport($event_data)
