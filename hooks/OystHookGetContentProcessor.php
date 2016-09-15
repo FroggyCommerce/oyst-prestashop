@@ -90,6 +90,7 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         $assign['allow_url_fopen_check'] = ini_get('allow_url_fopen');
         $assign['curl_check'] = function_exists('curl_version');
 
+        $assign['payment_notification_url'] = $this->context->link->getModuleLink('oyst', 'paymentNotification').'?key='.Configuration::get('FC_OYST_HASH_KEY');
         $assign['notification_url'] = $this->context->link->getModuleLink('oyst', 'notification').'?key='.Configuration::get('FC_OYST_HASH_KEY');
 
         if (Configuration::get('FC_OYST_PAYMENT_FEATURE') == 1) {

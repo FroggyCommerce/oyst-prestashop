@@ -98,6 +98,7 @@ class OystSDK
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: '.strlen($data_string),
+            'User-Agent: OystPrestashop/'._PS_OYST_VERSION_.' (Prestashop '._PS_VERSION_.')',
             'Authorization: bearer '.$this->getApiKey(),
         ]);
 

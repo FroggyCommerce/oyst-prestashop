@@ -61,7 +61,7 @@ class Oyst extends FroggyPaymentModule
     public function __construct()
     {
         $this->name = 'oyst';
-        $this->version = '0.2.0';
+        $this->version = '0.8.0';
         $this->author = 'Froggy Commerce / 23Prod';
         $this->tab = 'payments_gateways';
 
@@ -70,6 +70,10 @@ class Oyst extends FroggyPaymentModule
         $this->displayName = $this->l('Oyst');
         $this->description = $this->l('Oyst provides 1 click shopping advertising technology and creates a new ecosystem at the crossroads of customised advertising and online payment.');
         $this->module_key = '';
+
+        if (!defined('_PS_OYST_VERSION_')) {
+            define('_PS_OYST_VERSION_', $this->version);
+        }
     }
 
     public function install()

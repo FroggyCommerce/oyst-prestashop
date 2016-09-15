@@ -54,13 +54,57 @@
                 
                 <div id="froggy-module-configuration">
 
+
+
+
+
                     <div class="form-group clearfix">
-                    <label class="col-lg-3">{l s='Enable payment feature:' mod='oyst'}</label>
+                        <label class="col-lg-3">{l s='Set your Oyst API key:' mod='oyst'}</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY}" />
+                            <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
+                            {if isset($oyst.oyst_connection_test)}
+                                {if $oyst.oyst_connection_test}
+                                    <div class="alert alert-success">{l s='Your key is valid!' mod='oyst'}</div>
+                                {else}
+                                    <div class="alert alert-danger">{l s='Your key seems invalid!' mod='oyst'}</div>
+                                {/if}
+                            {/if}
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group clearfix">
+                        <label class="col-lg-3">{l s='Enable payment feature:' mod='oyst'}</label>
                         <div class="col-lg-9">
                             <input type="checkbox" id="FC_OYST_PAYMENT_FEATURE" name="FC_OYST_PAYMENT_FEATURE" value="1"{if $oyst.FC_OYST_PAYMENT_FEATURE} checked="checked"{/if} />
                             <p class="help-block">{l s='Enable Oyst payment for your shop!' mod='oyst'}</p>
                         </div>
                     </div>
+
+                    <div class="form-group clearfix">
+                        <label class="col-lg-3">{l s='Set the Oyst payment endpoint:' mod='oyst'}</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT}" />
+                            <p class="help-block">
+                                {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
+                                {l s='Test URL:' mod='oyst'} http://payment.staging.oyst.eu/payments
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label class="col-lg-3">{l s='Payment notification URL :' mod='oyst'}</label>
+                        <div class="col-lg-9">
+                            {$oyst.payment_notification_url}
+                            <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
+                        </div>
+                    </div>
+
+
+                    <div style="display:none">
+                    <hr />
 
                     <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Enable export catalog feature:' mod='oyst'}</label>
@@ -79,33 +123,13 @@
                     </div>
 
                     <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Set your Oyst API key:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY}" />
-                            <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
-                            {if isset($oyst.oyst_connection_test)}
-                                {if $oyst.oyst_connection_test}
-                                    <div class="alert alert-success">{l s='Your key is valid!' mod='oyst'}</div>
-                                {else}
-                                    <div class="alert alert-danger">{l s='Your key seems invalid!' mod='oyst'}</div>
-                                {/if}
-                            {/if}
-                        </div>
-                    </div>
-
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Set the Oyst payment endpoint:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT}" />
-                            <p class="help-block">{l s='If you\'re not sure what to set, do not change it.' mod='oyst'}</p>
-                        </div>
-                    </div>
-
-                    <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Set the Oyst catalog endpoint:' mod='oyst'}</label>
                         <div class="col-lg-9">
                             <input type="text" id="FC_OYST_API_EXPORT_ENDPOINT" name="FC_OYST_API_EXPORT_ENDPOINT" value="{$oyst.FC_OYST_API_EXPORT_ENDPOINT}" />
-                            <p class="help-block">{l s='If you\'re not sure what to set, do not change it.' mod='oyst'}</p>
+                            <p class="help-block">
+                                {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
+                                {l s='Test URL:' mod='oyst'} http://catalog.staging.oyst.eu/products
+                            </p>
                         </div>
                     </div>
 
@@ -113,9 +137,11 @@
                         <label class="col-lg-3">{l s='Notification URL :' mod='oyst'}</label>
                         <div class="col-lg-9">
                             {$oyst.notification_url}
+                            <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                         </div>
                     </div>
 
+                    </div>
 
                 </div>
 
