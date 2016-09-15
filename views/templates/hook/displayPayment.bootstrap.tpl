@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-xs-12 col-md-12">
         <p class="payment_module">
-            <a href="{$link->getModuleLink('oyst', 'payment')|escape:'html'}" class="oyst">
+            <a href="{$link->getModuleLink('oyst', 'payment')|escape:'htmlall':'UTF-8'}" class="oyst">
                 {l s='Pay by Credit Card' mod='oyst'}
             </a>
         </p>
@@ -43,7 +43,7 @@
         width: 14px;
     }
     p.payment_module a.oyst {
-        background: #fbfbfb url("{$oyst.module_dir}views/img/logo-horizontal-credit-card.png") no-repeat scroll 15px 15px;
+        background: #fbfbfb url("{$oyst.module_dir|escape:'htmlall':'UTF-8'}views/img/logo-horizontal-credit-card.png") no-repeat scroll 15px 15px;
         padding-left: 390px;
     }
 </style>

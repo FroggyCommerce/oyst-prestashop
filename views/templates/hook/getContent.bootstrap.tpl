@@ -61,7 +61,7 @@
                     <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Set your Oyst API key:' mod='oyst'}</label>
                         <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY}" />
+                            <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY|escape:'htmlall':'UTF-8'}" />
                             <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
                             {if isset($oyst.oyst_connection_test)}
                                 {if $oyst.oyst_connection_test}
@@ -86,7 +86,7 @@
                     <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Set the Oyst payment endpoint:' mod='oyst'}</label>
                         <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT}" />
+                            <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
                             <p class="help-block">
                                 {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
                                 {l s='Test URL:' mod='oyst'} http://payment.staging.oyst.eu/payments
@@ -97,7 +97,7 @@
                     <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Payment notification URL :' mod='oyst'}</label>
                         <div class="col-lg-9">
-                            {$oyst.payment_notification_url}
+                            {$oyst.payment_notification_url|escape:'htmlall':'UTF-8'}
                             <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
                     <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Set the Oyst catalog endpoint:' mod='oyst'}</label>
                         <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_EXPORT_ENDPOINT" name="FC_OYST_API_EXPORT_ENDPOINT" value="{$oyst.FC_OYST_API_EXPORT_ENDPOINT}" />
+                            <input type="text" id="FC_OYST_API_EXPORT_ENDPOINT" name="FC_OYST_API_EXPORT_ENDPOINT" value="{$oyst.FC_OYST_API_EXPORT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
                             <p class="help-block">
                                 {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
                                 {l s='Test URL:' mod='oyst'} http://catalog.staging.oyst.eu/products
@@ -136,7 +136,7 @@
                     <div class="form-group clearfix">
                         <label class="col-lg-3">{l s='Notification URL :' mod='oyst'}</label>
                         <div class="col-lg-9">
-                            {$oyst.notification_url}
+                            {$oyst.notification_url|escape:'htmlall':'UTF-8'}
                             <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                         </div>
                     </div>
