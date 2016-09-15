@@ -16,7 +16,7 @@
  *
  * @author    Froggy Commerce <contact@froggy-commerce.com>
  * @copyright 2013-2016 Froggy Commerce / 23Prod / Oyst
- * @license GNU GENERAL PUBLIC LICENSE
+ * @license   GNU GENERAL PUBLIC LICENSE
  */
 
 /*

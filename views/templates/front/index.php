@@ -16,24 +16,16 @@
  *
  * @author    Froggy Commerce <contact@froggy-commerce.com>
  * @copyright 2013-2016 Froggy Commerce / 23Prod / Oyst
- * @license   GNU GENERAL PUBLIC LICENSE
+ * @license GNU GENERAL PUBLIC LICENSE
  */
 
-// Construct path
-$config_path = dirname(__FILE__).'/../../config/config.inc.php';
-$module_path = dirname(__FILE__).'/oyst.php';
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 
-// Set _PS_ADMIN_DIR_ define
-define('_PS_ADMIN_DIR_', getcwd());
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-// Keep going if config script is found
-if (file_exists($config_path))
-{
-    include($config_path);
-    include($module_path);
-    $oyst = new Oyst();
-    $oyst->exportCatalog();
-}
-else
-    die('ERROR');
+header('Location: ../');
+exit;
 
