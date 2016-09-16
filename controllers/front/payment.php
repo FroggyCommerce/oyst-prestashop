@@ -97,6 +97,9 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
         $result = $oyst_api->paymentRequest($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true, $user);
 
+        // Result payment
+        $this->module->logNotification('Result payment', $result);
+
         // Redirect to payment
         $result = Tools::jsonDecode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
