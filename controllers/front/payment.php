@@ -63,7 +63,7 @@ class OystPaymentModuleFrontController extends ModuleFrontController
             new Address($this->context->cart->id_address_delivery),
         );
         $main_phone = '';
-        if (isset($addresses[0]->phone) && !empty($addresses[0]->phone)) {
+        if (isset($addresses[0]->phone_mobile) && !empty($addresses[0]->phone_mobile)) {
             $main_phone = $addresses[0]->phone_mobile;
         }
         if (empty($main_phone) && isset($addresses[0]->phone) && !empty($addresses[0]->phone)) {
