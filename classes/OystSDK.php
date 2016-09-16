@@ -102,6 +102,10 @@ class OystSDK
             'Authorization: bearer '.$this->getApiKey(),
         ]);
 
+        // Debug log
+        $this->module->log($endpoint);
+        $this->module->log($data);
+
         return curl_exec($ch);
     }
 
