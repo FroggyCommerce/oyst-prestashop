@@ -98,25 +98,7 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         $result = $oyst_api->paymentRequest($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true, $user);
 
         // Result payment
-        $data = array(
-            'amount' => array(
-                'value' => (float)$total_amount,
-                'currency' => (string)$currency->iso_code,
-            ),
-            'is_3d' => true,
-            'label' => 'Cart '.(int)$this->context->cart->id,
-            'notification_url' => $urls['notification'],
-            'order_id' => (string)$this->context->cart->id,
-            'redirects' => array(
-                'cancel_url' => $urls['cancel'],
-                'error_url' => $urls['error'],
-                'return_url' => $urls['return'],
-            ),
-            'user' => $user,
-        );
-        $this->module->log(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));
-        $this->module->log(Configuration::get('FC_OYST_API_KEY'));
-        $this->module->log($data);
+        $this->module->log($user);
         $this->module->logNotification('Result payment', $result);
 
         // Redirect to payment
