@@ -68,7 +68,6 @@ class OystSDK
                 'currency' => (string)$currency,
             ),
             'is_3d' => $is_3d,
-            'label' => 'Cart '.(int)$id_cart,
             'notification_url' => $urls['notification'],
             'order_id' => (string)$id_cart,
             'redirects' => array(
