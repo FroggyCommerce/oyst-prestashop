@@ -20,7 +20,7 @@
 
 <p class="payment_module">
     <a href="{$link->getModuleLink('oyst', 'payment')|escape:'htmlall':'UTF-8'}">
-        <img src="{$oyst.module_dir|escape:'htmlall':'UTF-8'}views/img/logo-horizontal-credit-card.png" alt="{l s='Pay by check.' mod='cheque'}" height="49" />
+        <img src="{$oyst.module_dir|escape:'htmlall':'UTF-8'}views/img/logo-horizontal-credit-card.png" height="49" />
         {l s='Pay by Credit Card' mod='oyst'}
     </a>
 </p>
