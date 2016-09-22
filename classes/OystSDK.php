@@ -77,7 +77,7 @@ class OystSDK
             ),
             'user' => $user,
         );
-        return $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
+        return $this->_apiPostRequest($this->getApiPaymentEndpoint().'/payments', $data);
     }
 
     public function productPostRequest($products)
