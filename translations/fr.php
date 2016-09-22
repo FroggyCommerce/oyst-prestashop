@@ -33,7 +33,7 @@ $_MODULE['<{oyst}prestashop>getcontent.bootstrap_e878296944f4e1f0fe27c3ba0558a21
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_fded9ddc991365bc702700dacbba1cab'] = 'Si vous n\'êtes pas sûr de ce qu\'il faut mettre, ne changez rien.';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_48ce100d42120c56edbdc0b5d6a4141c'] = 'URL de test :';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_7ee31e9f6a434a7b20dac78603a506e5'] = 'URL de notification de paiement :';
-$_MODULE['<{oyst}prestashop>getcontent.bootstrap_acbb9c4a689c89df48f45bc22dd2a9f5'] = 'Donner cette URL à Oyst :';
+$_MODULE['<{oyst}prestashop>getcontent.bootstrap_acbb9c4a689c89df48f45bc22dd2a9f5'] = 'Donner cette URL à Oyst';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_74b95e43c22a19e49968aca2185a9c7d'] = 'Export catalogue';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_55864aa19ad755ef5f01d1e89b77a1b1'] = 'Exportez votre catalogue vers Oyst pour augmenter votre nombre de commandes !';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_669cb2eb32a6f005821f6b78d1079bb0'] = 'Importation des commandes';
@@ -56,7 +56,7 @@ $_MODULE['<{oyst}prestashop>getcontent_e878296944f4e1f0fe27c3ba0558a215'] = 'End
 $_MODULE['<{oyst}prestashop>getcontent_fded9ddc991365bc702700dacbba1cab'] = 'Si vous n\'êtes pas sûr de ce qu\'il faut mettre, ne changez rien.';
 $_MODULE['<{oyst}prestashop>getcontent_48ce100d42120c56edbdc0b5d6a4141c'] = 'URL de test :';
 $_MODULE['<{oyst}prestashop>getcontent_7ee31e9f6a434a7b20dac78603a506e5'] = 'URL de notification de paiement :';
-$_MODULE['<{oyst}prestashop>getcontent_acbb9c4a689c89df48f45bc22dd2a9f5'] = 'Donner cette URL à Oyst :';
+$_MODULE['<{oyst}prestashop>getcontent_acbb9c4a689c89df48f45bc22dd2a9f5'] = 'Donner cette URL à Oyst';
 $_MODULE['<{oyst}prestashop>getcontent_74b95e43c22a19e49968aca2185a9c7d'] = 'Export catalogue';
 $_MODULE['<{oyst}prestashop>getcontent_55864aa19ad755ef5f01d1e89b77a1b1'] = 'Exportez votre catalogue vers Oyst pour augmenter votre nombre de commandes !';
 $_MODULE['<{oyst}prestashop>getcontent_669cb2eb32a6f005821f6b78d1079bb0'] = 'Importation des commandes';

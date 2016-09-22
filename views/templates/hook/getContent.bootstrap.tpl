@@ -47,7 +47,7 @@
 <fieldset id="oyst_fieldset">
     <h2>{l s='Oyst configuration' mod='oyst'}</h2>
     <div class="panel">
-        <legend><img src="{$oyst.module_dir|escape:'html':'UTF-8'}logo.png" alt="" width="16" />{l s='Oyst' mod='oyst'}</legend>
+        <legend><img src="{$oyst.module_dir|escape:'html':'UTF-8'}views/img/logo-oyst.png" /></legend>
 
         <form method="POST" action="#">
             <div id="oyst-admin-tab">
