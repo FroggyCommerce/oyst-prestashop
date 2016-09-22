@@ -51,7 +51,7 @@ class OystSDK
             'shopper_email' => Configuration::get('PS_SHOP_EMAIL'),
         );
 
-        $result = $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
+        $result = $this->_apiPostRequest($this->getApiPaymentEndpoint().'/payments', $data);
         $result = Tools::jsonDecode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
             return true;
