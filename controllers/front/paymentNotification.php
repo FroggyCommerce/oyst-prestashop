@@ -124,6 +124,6 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         }
 
         // Validate order
-        $this->module->validateOrder($cart->id, $payment_status, $transaction['total_paid'], $this->module->displayName, $message, $transaction, $cart->id_currency, false, $this->context->customer->secure_key, $shop);
+        $this->module->validateOrder($cart->id, $payment_status, $transaction['total_paid'], 'CB', $message, $transaction, $cart->id_currency, false, $this->context->customer->secure_key, $shop);
     }
 }
