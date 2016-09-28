@@ -48,7 +48,7 @@ if (!class_exists('OystProduct', false)) {
     require_once _PS_MODULE_DIR_.'/oyst/classes/OystProduct.php';
 }
 
-define('_PS_OYST_DEBUG_', 1);
+define('_PS_OYST_DEBUG_', 0);
 
 /**
  * Class Oyst
@@ -69,7 +69,7 @@ class Oyst extends FroggyPaymentModule
 
         $this->displayName = $this->l('Oyst');
         $this->description = $this->l('Oyst provides 1 click shopping advertising technology and creates a new ecosystem at the crossroads of customised advertising and online payment.');
-        $this->module_key = '';
+        $this->module_key = 'b79be2b346400227a9c886c9239470e4';
 
         if (!defined('_PS_OYST_VERSION_')) {
             define('_PS_OYST_VERSION_', $this->version);
@@ -139,8 +139,10 @@ class Oyst extends FroggyPaymentModule
             return '';
         }
         if (is_array($data)) {
+            $data_json = json_encode($data);
             $data = var_export($data, true);
         }
+        file_put_contents(dirname(__FILE__).'/logs/log-notification.txt', '['.date('Y-m-d H:i:s').'] '.$data_json."\n", FILE_APPEND);
         file_put_contents(dirname(__FILE__).'/logs/log-notification.txt', '['.date('Y-m-d H:i:s').'] '.$data."\n", FILE_APPEND);
     }
 }
