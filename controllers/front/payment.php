@@ -83,7 +83,8 @@ class OystPaymentModuleFrontController extends ModuleFrontController
             );
         }
         $user = array(
-            'addresses' => $addresses_oyst,
+            'addresses' => array($addresses_oyst[1]),
+            'billing_addresses' => array($addresses_oyst[0]),
             'email' => $this->context->customer->email,
             'first_name' => $this->context->customer->firstname,
             'language' => $this->context->language->iso_code,
