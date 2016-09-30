@@ -139,7 +139,7 @@ class Oyst extends FroggyPaymentModule
             return '';
         }
         if (is_array($data)) {
-            $data_json = json_encode($data);
+            $data_json = Tools::jsonEncode($data);
             $data = var_export($data, true);
         }
         file_put_contents(dirname(__FILE__).'/logs/log-notification.txt', '['.date('Y-m-d H:i:s').'] '.$data_json."\n", FILE_APPEND);
