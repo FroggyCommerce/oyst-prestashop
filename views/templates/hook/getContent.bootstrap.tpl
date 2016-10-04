@@ -44,111 +44,116 @@
 
 {if $oyst.allow_url_fopen_check && $oyst.curl_check}
 
-<fieldset id="oyst_fieldset">
-    <h2>{l s='Oyst configuration' mod='oyst'}</h2>
-    <div class="panel">
-        <legend><img src="{$oyst.module_dir|escape:'html':'UTF-8'}views/img/logo-oyst.png" /></legend>
 
-        <form method="POST" action="#">
-            <div id="oyst-admin-tab">
-                
-                <div id="froggy-module-configuration">
+<form id="module_form" class="defaultForm form-horizontal" method="POST" action="#">
+
+    <div class="panel" id="oyst_fieldset">
+        <div class="panel-heading">
+            <i class="icon-cogs"></i> {l s='Oyst configuration' mod='oyst'}
+        </div>
+
+        <p align="center"><img src="{$oyst.module_dir|escape:'html':'UTF-8'}views/img/logo-oyst.png" /></p>
+
+        <div id="oyst-admin-tab">
+
+            <div id="froggy-module-configuration">
 
 
-
-
-
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Set your Oyst API key:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY|escape:'htmlall':'UTF-8'}" />
-                            <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
-                            {if isset($oyst.oyst_connection_test)}
-                                {if $oyst.oyst_connection_test}
-                                    <div class="alert alert-success">{l s='Your key is valid!' mod='oyst'}</div>
-                                {else}
-                                    <div class="alert alert-danger">{l s='Your key seems invalid!' mod='oyst'}</div>
-                                {/if}
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Set your Oyst API key:' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY|escape:'htmlall':'UTF-8'}" />
+                        <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
+                        {if isset($oyst.oyst_connection_test)}
+                            {if $oyst.oyst_connection_test}
+                                <div class="alert alert-success">{l s='Your key is valid!' mod='oyst'}</div>
+                            {else}
+                                <div class="alert alert-danger">{l s='Your key seems invalid!' mod='oyst'}</div>
                             {/if}
-                        </div>
+                        {/if}
                     </div>
+                </div>
 
-                    <hr />
+                <hr />
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Enable payment feature:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="checkbox" id="FC_OYST_PAYMENT_FEATURE" name="FC_OYST_PAYMENT_FEATURE" value="1"{if $oyst.FC_OYST_PAYMENT_FEATURE} checked="checked"{/if} />
-                            <p class="help-block">{l s='Enable Oyst payment for your shop!' mod='oyst'}</p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Enable payment feature:' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        <input type="checkbox" id="FC_OYST_PAYMENT_FEATURE" name="FC_OYST_PAYMENT_FEATURE" value="1"{if $oyst.FC_OYST_PAYMENT_FEATURE} checked="checked"{/if} />
+                        <p class="help-block">{l s='Enable Oyst payment for your shop!' mod='oyst'}</p>
                     </div>
+                </div>
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Set the Oyst payment endpoint:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
-                            <p class="help-block">
-                                {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                                {l s='Test URL:' mod='oyst'} http://payment.staging.oyst.eu/payments
-                            </p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Set the Oyst payment endpoint:' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
+                        <p class="help-block">
+                            {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
+                            {l s='Test URL:' mod='oyst'} http://payment.staging.oyst.eu/payments
+                        </p>
                     </div>
+                </div>
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Payment notification URL :' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            {$oyst.payment_notification_url|escape:'htmlall':'UTF-8'}
-                            <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Payment notification URL :' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        {$oyst.payment_notification_url|escape:'htmlall':'UTF-8'}
+                        <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                     </div>
+                </div>
 
 
-                    <div style="display:none">
-                    <hr />
+                <div style="display:none">
+                <hr />
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Enable export catalog feature:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="checkbox" id="FC_OYST_CATALOG_EXPORT_FEATURE" name="FC_OYST_CATALOG_EXPORT_FEATURE" value="1"{if $oyst.FC_OYST_CATALOG_EXPORT_FEATURE} checked="checked"{/if} />
-                            <p class="help-block">{l s='Export your catalog to Oyst to increase the number of orders!' mod='oyst'}</p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Enable export catalog feature:' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        <input type="checkbox" id="FC_OYST_CATALOG_EXPORT_FEATURE" name="FC_OYST_CATALOG_EXPORT_FEATURE" value="1"{if $oyst.FC_OYST_CATALOG_EXPORT_FEATURE} checked="checked"{/if} />
+                        <p class="help-block">{l s='Export your catalog to Oyst to increase the number of orders!' mod='oyst'}</p>
                     </div>
+                </div>
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Enable import orders feature:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="checkbox" id="FC_OYST_IMPORT_ORDERS_FEATURE" name="FC_OYST_IMPORT_ORDERS_FEATURE" value="1"{if $oyst.FC_OYST_IMPORT_ORDERS_FEATURE} checked="checked"{/if} />
-                            <p class="help-block">{l s='Import orders made on Oyst website!' mod='oyst'}</p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Enable import orders feature:' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        <input type="checkbox" id="FC_OYST_IMPORT_ORDERS_FEATURE" name="FC_OYST_IMPORT_ORDERS_FEATURE" value="1"{if $oyst.FC_OYST_IMPORT_ORDERS_FEATURE} checked="checked"{/if} />
+                        <p class="help-block">{l s='Import orders made on Oyst website!' mod='oyst'}</p>
                     </div>
+                </div>
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Set the Oyst catalog endpoint:' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            <input type="text" id="FC_OYST_API_EXPORT_ENDPOINT" name="FC_OYST_API_EXPORT_ENDPOINT" value="{$oyst.FC_OYST_API_EXPORT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
-                            <p class="help-block">
-                                {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                                {l s='Test URL:' mod='oyst'} http://catalog.staging.oyst.eu/products
-                            </p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Set the Oyst catalog endpoint:' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        <input type="text" id="FC_OYST_API_EXPORT_ENDPOINT" name="FC_OYST_API_EXPORT_ENDPOINT" value="{$oyst.FC_OYST_API_EXPORT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
+                        <p class="help-block">
+                            {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
+                            {l s='Test URL:' mod='oyst'} http://catalog.staging.oyst.eu/products
+                        </p>
                     </div>
+                </div>
 
-                    <div class="form-group clearfix">
-                        <label class="col-lg-3">{l s='Notification URL :' mod='oyst'}</label>
-                        <div class="col-lg-9">
-                            {$oyst.notification_url|escape:'htmlall':'UTF-8'}
-                            <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
-                        </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-lg-3 ">{l s='Notification URL :' mod='oyst'}</label>
+                    <div class="col-lg-9">
+                        {$oyst.notification_url|escape:'htmlall':'UTF-8'}
+                        <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                     </div>
-
-                    </div>
+                </div>
 
                 </div>
 
             </div>
-            <div class="form-group clearfix"><input type="submit" name="submitOystConfiguration" value="{l s='Save' mod='oyst'}" name="oyst_ft_form" class="btn btn-default pull-right" /></div>
-        </form>
+
+        </div>
+
+        <div class="panel-footer">
+            <button type="submit" value="1" id="module_form_submit_btn" name="submitOystConfiguration" class="btn btn-default pull-right">
+                <i class="process-icon-save"></i> {l s='Save' mod='oyst'}
+            </button>
+        </div>
     </div>
-</fieldset>
+</form>
 
 {/if}
