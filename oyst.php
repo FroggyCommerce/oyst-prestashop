@@ -61,7 +61,7 @@ class Oyst extends FroggyPaymentModule
     public function __construct()
     {
         $this->name = 'oyst';
-        $this->version = '0.8.2';
+        $this->version = '0.8.3';
         $this->author = 'Froggy Commerce / 23Prod';
         $this->tab = 'payments_gateways';
 
@@ -73,6 +73,11 @@ class Oyst extends FroggyPaymentModule
 
         if (!defined('_PS_OYST_VERSION_')) {
             define('_PS_OYST_VERSION_', $this->version);
+        }
+
+        // If PS 1.6 or greater, we enable bootstrap
+        if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
+            $this->bootstrap = true;
         }
     }
 
