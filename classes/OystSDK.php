@@ -100,6 +100,7 @@ class OystSDK
             'User-Agent: OystPrestashop/'._PS_OYST_VERSION_.' (Prestashop '._PS_VERSION_.')',
             'Authorization: bearer '.$this->getApiKey(),
         ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 2000);
 
         return curl_exec($ch);
     }

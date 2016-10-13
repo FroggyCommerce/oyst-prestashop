@@ -30,8 +30,18 @@ define('_PS_ADMIN_DIR_', getcwd());
 if (file_exists($config_path)) {
     include($config_path);
     include($module_path);
-    $oyst = new Oyst();
-    $oyst->exportCatalog();
+    if (OystIsPHPCLI()) {
+        $oyst = new Oyst();
+        $oyst->exportCatalog();
+    } else {
+        die('Should be called in command line');
+    }
 } else {
     die('ERROR');
+}
+
+// Function IsPHPCLI
+function OystIsPHPCLI()
+{
+    return (defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR']))));
 }
