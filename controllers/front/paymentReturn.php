@@ -34,20 +34,33 @@ class OystPaymentReturnModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
+        $cart = new Cart(Tools::getValue('id_cart'));
+        $customer = new Customer($cart->id_customer);
+        if ($customer->secure_key != Tools::getValue('key')) {
+            die('Wrong security key');
+        }
+
         // Build urls and amount
         $glue = '&';
         if (Configuration::get('PS_REWRITING_SETTINGS') == 1) {
             $glue = '?';
         }
-        $url = $this->context->link->getPageLink('order-confirmation').$glue.'id_cart='.$this->context->cart->id.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$this->context->customer->secure_key;
+        $url = $this->context->link->getPageLink('order-confirmation').$glue.'id_cart='.$cart->id.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$customer->secure_key;
 
         // Load cart and order
         $id_cart = (int)Tools::getValue('id_cart');
         $id_order = Order::getOrderByCartId($id_cart);
         $order = new Order($id_order);
 
+        // If order exists we redirect to confirmation page
         if (Validate::isLoadedObject($order)) {
             Tools::redirect($url);
+        }
+
+        // If cart in context is the cart we just paid, we create new cart
+        if ($this->context->cart->id == $cart->id) {
+            $this->context->cart = new Cart();
+            $this->context->cookie->id_cart = 0;
         }
 
         $this->setTemplate('return'.(version_compare(_PS_VERSION_, '1.6.0') ? '.bootstrap' : '').'.tpl');
