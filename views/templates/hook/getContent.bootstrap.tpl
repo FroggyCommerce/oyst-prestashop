@@ -134,6 +134,7 @@
                     </div>
                 </div>
 
+                    {*
                 <div class="form-group clearfix">
                     <label class="control-label col-lg-3 ">{l s='Notification URL :' mod='oyst'}</label>
                     <div class="col-lg-9">
@@ -141,6 +142,7 @@
                         <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                     </div>
                 </div>
+    *}
 
                 </div>
 

@@ -8,6 +8,8 @@ $_MODULE['<{oyst}prestashop>paymentnotification_572f9af7615560af2cba038cc1948287
 $_MODULE['<{oyst}prestashop>paymentnotification_36ec50c0e914dd2fb48a1b27540512ce'] = 'Paiement accepté.';
 $_MODULE['<{oyst}prestashop>paymentnotification_a495948365afdff85b1f0c6e95fc36f7'] = 'Le paiement a échouché.';
 $_MODULE['<{oyst}prestashop>error.bootstrap_d7d1f4fbae8289169d1d5b3779cef94a'] = 'Une erreur est survenue avec le système de paiement. Veuillez contacter le support.';
+$_MODULE['<{oyst}prestashop>return.bootstrap_52665408d5d22a492abb8b61844b0488'] = 'Nous n\'avons pas encore reçu la confirmation du paiement. Veuillez attendre quelques minutes pour rafraichir cette page.';
+$_MODULE['<{oyst}prestashop>return_52665408d5d22a492abb8b61844b0488'] = 'Nous n\'avons pas encore reçu la confirmation du paiement. Veuillez attendre quelques minutes pour rafraichir cette page.';
 $_MODULE['<{oyst}prestashop>displaypayment.bootstrap_e77bb171c7ae55bba8b2ed869fadfb19'] = 'Payer par carte bancaire';
 $_MODULE['<{oyst}prestashop>displaypayment_e77bb171c7ae55bba8b2ed869fadfb19'] = 'Payer par carte bancaire';
 $_MODULE['<{oyst}prestashop>displaypaymentreturn.bootstrap_e72f5db7df95fb92f69e9b5ac76f05fe'] = 'Votre commande %s a bien été enregistrée.';
@@ -22,7 +24,6 @@ $_MODULE['<{oyst}prestashop>getcontent.bootstrap_4725c2b6db34f755b89b741c1d45bc7
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_9b0c85b97abeed9539a4a27522f07b86'] = 'Vous devez activer l\'option \"allow_url_fopen\" sur votre serveur pour utiliser ce module !';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_1e9a47f645f877ccb0802c12a409fcdf'] = 'Vous devez activer l\'extension \"cURL\" sur votre serveur pour utiliser ce module !';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_fbfb2fca2198f2de73351ede1f2e7058'] = 'Configuration du module Oyst';
-$_MODULE['<{oyst}prestashop>getcontent.bootstrap_4952647bd504f1369bde6167a667609b'] = 'Oyst';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_32457e80793e343086c3369850877938'] = 'Veuillez remplir votre clé API Oyst :';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_7efe355afadb7fc768cc54174a0fec62'] = 'Vous avez besoin de cette clé pour utiliser le système de paiement Oyst mais également pour exporter votre catalogue et importer vos commandes.';
 $_MODULE['<{oyst}prestashop>getcontent.bootstrap_1e755a12eb9bf76c24d7a372a294b1d6'] = 'Votre clé API est valide !';

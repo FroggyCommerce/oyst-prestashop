@@ -51,9 +51,9 @@ class OystPaymentModuleFrontController extends ModuleFrontController
             'notification' => $this->context->link->getModuleLink('oyst', 'paymentNotification').$glue.'key='.Configuration::get('FC_OYST_HASH_KEY').'&ch='.$cart_hash,
             'cancel' => $this->context->link->getModuleLink('oyst', 'paymentError'),
             'error' => $this->context->link->getModuleLink('oyst', 'paymentError'),
-            'return' => $this->context->link->getPageLink('order-confirmation').$glue.'id_cart='.$this->context->cart->id.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$this->context->customer->secure_key,
+            'return' => $this->context->link->getModuleLink('oyst', 'paymentReturn').$glue.'id_cart='.$this->context->cart->id.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$this->context->customer->secure_key,
         );
-        $currency = new CurrencyCore($this->context->cart->id_currency);
+        $currency = new Currency($this->context->cart->id_currency);
         $total_amount = (int)ceil($this->context->cart->getOrderTotal() * 100);
 
         // Build user variables
