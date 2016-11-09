@@ -38,7 +38,7 @@ class OystHookDisplayPaymentReturnProcessor extends FroggyHookProcessor
         // Load data
         $id_cart = (int)Tools::getValue('id_cart');
         $id_order = Order::getOrderByCartId($id_cart);
-        $order = new OrderCore($id_order);
+        $order = new Order($id_order);
         $transaction_id = Db::getInstance()->getValue('
         SELECT `payment_id` FROM `'._DB_PREFIX_.'oyst_payment_notification`
         WHERE `id_cart` = '.(int)$id_cart);
