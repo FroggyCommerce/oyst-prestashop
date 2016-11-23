@@ -60,14 +60,10 @@
                 <div class="margin-form" style="padding-left:15px"><input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" size="128" /></div>
                 <p class="help-block">
                     {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                    {l s='Test URL:' mod='oyst'} http://payment.staging.oyst.eu
+                    {l s='Test URL:' mod='oyst'} https://payment.staging.uptain.eu
                 </p>
                 <br>
 
-                <p><b>{l s='Payment notification URL :' mod='oyst'}</b></p>
-                <div class="margin-form" style="padding-left:15px">{$oyst.payment_notification_url|escape:'htmlall':'UTF-8'}</div>
-                <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
-                <br>
 
 
                     <div style="display:none">
@@ -114,6 +110,7 @@
 
                 <br><p><input type="submit" name="submitOystConfiguration" value="{l s='Save' mod='oyst'}" name="oyst_ft_form" class="button" /></p>
 
+                <p>Module version : {$oyst.module_version}</p>
             </div>
     </fieldset>
 </form>

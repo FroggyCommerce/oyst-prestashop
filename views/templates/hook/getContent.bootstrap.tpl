@@ -90,16 +90,8 @@
                         <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
                         <p class="help-block">
                             {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                            {l s='Test URL:' mod='oyst'} http://payment.staging.oyst.eu
+                            {l s='Test URL:' mod='oyst'} https://payment.staging.uptain.eu
                         </p>
-                    </div>
-                </div>
-
-                <div class="form-group clearfix">
-                    <label class="control-label col-lg-3 ">{l s='Payment notification URL :' mod='oyst'}</label>
-                    <div class="col-lg-9">
-                        {$oyst.payment_notification_url|escape:'htmlall':'UTF-8'}
-                        <p class="help-block">{l s='Give this url to Oyst.' mod='oyst'}</p>
                     </div>
                 </div>
 
@@ -155,6 +147,8 @@
                 <i class="process-icon-save"></i> {l s='Save' mod='oyst'}
             </button>
         </div>
+
+        <p>Module version : {$oyst.module_version}</p>
     </div>
 </form>
 
