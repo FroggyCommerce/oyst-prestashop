@@ -110,12 +110,12 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         }
 
         // Redirect to error page, save data in
-        $this->context->cookie->oyst_debug = Tools::jsonEncode(
+        $this->context->cookie->oyst_debug = base64_encode(Tools::jsonEncode(
             array_merge(
                 $user,
                 $result,
                 array($total_amount, $currency->iso_code, $this->context->cart->id, $urls, true)
-            )
+            ))
         );
         Tools::redirect($urls['error']);
     }
