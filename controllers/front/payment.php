@@ -47,11 +47,12 @@ class OystPaymentModuleFrontController extends ModuleFrontController
         if (Configuration::get('PS_REWRITING_SETTINGS') == 1) {
             $glue = '?';
         }
+        $params = $this->context->cart->id.'|'.Module::getModuleIdByName('oyst').'|'.$this->context->customer->secure_key;
         $urls = array(
             'notification' => $this->context->link->getModuleLink('oyst', 'paymentNotification').$glue.'key='.Configuration::get('FC_OYST_HASH_KEY').'&ch='.$cart_hash,
             'cancel' => $this->context->link->getModuleLink('oyst', 'paymentError'),
             'error' => $this->context->link->getModuleLink('oyst', 'paymentError'),
-            'return' => $this->context->link->getModuleLink('oyst', 'paymentReturn').$glue.'param='.$this->context->cart->id.'&id_cart='.$this->context->cart->id.'|'.Module::getModuleIdByName('oyst').'|'.$this->context->customer->secure_key.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$this->context->customer->secure_key,
+            'return' => $this->context->link->getModuleLink('oyst', 'paymentReturn').$glue.'param='.$params.'&id_cart='.$this->context->cart->id.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$this->context->customer->secure_key,
         );
         $currency = new Currency($this->context->cart->id_currency);
         $total_amount = (int)ceil($this->context->cart->getOrderTotal() * 100);
