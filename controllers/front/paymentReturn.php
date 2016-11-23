@@ -34,9 +34,21 @@ class OystPaymentReturnModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $cart = new Cart(Tools::getValue('id_cart'));
+        // Get parameters
+        $id_cart = (int)Tools::getValue('id_cart');
+        $key = Tools::getValue('key');
+        $params = explode('.', Tools::getValue('params'));
+        if (isset($params[0])) {
+            $id_cart = (int)$params[0];
+        }
+        if (isset($params[1])) {
+            $key = $params[1];
+        }
+
+        // Get cart
+        $cart = new Cart($id_cart);
         $customer = new Customer($cart->id_customer);
-        if ($customer->secure_key != Tools::getValue('key')) {
+        if ($customer->secure_key != $key) {
             die('Wrong security key');
         }
 
@@ -48,7 +60,6 @@ class OystPaymentReturnModuleFrontController extends ModuleFrontController
         $url = $this->context->link->getPageLink('order-confirmation').$glue.'id_cart='.$cart->id.'&id_module='.Module::getModuleIdByName('oyst').'&key='.$customer->secure_key;
 
         // Load cart and order
-        $id_cart = (int)Tools::getValue('id_cart');
         $id_order = Order::getOrderByCartId($id_cart);
         $order = new Order($id_order);
 
