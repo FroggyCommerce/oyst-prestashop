@@ -37,13 +37,6 @@ class OystPaymentReturnModuleFrontController extends ModuleFrontController
         // Get parameters
         $id_cart = (int)Tools::getValue('id_cart');
         $key = Tools::getValue('key');
-        $params = explode('.', Tools::getValue('params'));
-        if (isset($params[0])) {
-            $id_cart = (int)$params[0];
-        }
-        if (isset($params[1])) {
-            $key = $params[1];
-        }
 
         // Get cart
         $cart = new Cart($id_cart);
