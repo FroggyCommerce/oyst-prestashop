@@ -48,7 +48,15 @@ class OystSDK
                 'error_url' => 'http://localhost.test',
                 'return_url' => 'http://localhost.test',
             ),
-            'shopper_email' => Configuration::get('PS_SHOP_EMAIL'),
+            'user' => array(
+                'addresses' => array(),
+                'billing_addresses' => array(),
+                'email' => Configuration::get('PS_SHOP_EMAIL'),
+                'first_name' => 'Test',
+                'language' => 'fr',
+                'last_name' => 'Test',
+                'phone' => '0100000000',
+            ),
         );
 
         $result = $this->_apiPostRequest($this->getApiPaymentEndpoint().'/payments', $data);
