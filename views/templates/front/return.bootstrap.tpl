@@ -22,3 +22,9 @@
     <p><img src="{$base_dir}img/loader.gif" />
     <strong>{l s='We did not receive the payment confirmation yet. Please wait a few minutes and refresh this page.' mod='oyst'}</strong></p>
 </div>
+
+<script>
+    setTimeout(function() {
+        window.location.href = window.location.href;
+    }, 2000);
+</script>
