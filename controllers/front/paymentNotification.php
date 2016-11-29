@@ -39,26 +39,25 @@ class OystPaymentNotificationModuleFrontController extends ModuleFrontController
         $event_data = trim(str_replace("'", '', Tools::file_get_contents('php://input')));
         $event_data = Tools::jsonDecode($event_data, true);
 
-        foreach ($event_data['notification_items'] as $notification_item) {
-            $insert = array(
-                'id_order' => 0,
-                'id_cart' => (int)$notification_item['order_id'],
-                'payment_id' =>  pSQL($notification_item['payment_id']),
-                'event_code' =>  pSQL($notification_item['event_code']),
-                'event_data' => pSQL(Tools::jsonEncode($event_data)),
-                'date_event' => pSQL(Tools::substr(str_replace('T', '', $notification_item['event_date']), 0, 19)),
-                'date_add' => date('Y-m-d H:i:s'),
-            );
-            if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
-                $this->module->log('Payment notification received');
-                $this->module->logNotification('Payment', $_GET);
-                try {
-                    $this->convertCartToOrder($notification_item, Tools::getValue('ch'));
-                } catch (Exception $e) {
-                    $this->module->log($e->getMessage());
-                }
-
+        $notification_item = $event_data['notification'];
+        $insert = array(
+            'id_order' => 0,
+            'id_cart' => (int)$notification_item['order_id'],
+            'payment_id' =>  pSQL($notification_item['payment_id']),
+            'event_code' =>  pSQL($notification_item['event_code']),
+            'event_data' => pSQL(Tools::jsonEncode($event_data)),
+            'date_event' => pSQL(Tools::substr(str_replace('T', '', $notification_item['event_date']), 0, 19)),
+            'date_add' => date('Y-m-d H:i:s'),
+        );
+        if (Db::getInstance()->insert('oyst_payment_notification', $insert)) {
+            $this->module->log('Payment notification received');
+            $this->module->logNotification('Payment', $_GET);
+            try {
+                $this->convertCartToOrder($notification_item, Tools::getValue('ch'));
+            } catch (Exception $e) {
+                $this->module->log($e->getMessage());
             }
+
         }
 
         die(Tools::jsonEncode(array('result' => 'ok')));
