@@ -94,7 +94,6 @@ class Oyst extends FroggyPaymentModule
             Db::getInstance()->execute('
             UPDATE `'._DB_PREFIX_.'hook_module` SET `position`= 1
             WHERE `id_hook` = '.(int)$id_hook.' AND `id_module` = '.$id_module);
-            echo 'yeah';
         }
 
         return $result;
