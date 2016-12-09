@@ -60,7 +60,7 @@
                 <div class="margin-form" style="padding-left:15px"><input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" size="128" /></div>
                 <p class="help-block">
                     {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                    {l s='Test URL:' mod='oyst'} https://payment.staging.uptain.eu
+                    {l s='Test URL:' mod='oyst'} https://api.staging.uptain.eu/payment
                 </p>
                 <br>
 
