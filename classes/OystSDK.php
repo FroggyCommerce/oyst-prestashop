@@ -69,11 +69,11 @@ class OystSDK
 
     public function testCatalogRequest()
     {
-        return array('result' => false, 'values' => array('error'));
-        $data = array('products' => $products);
-        $result = $this->_apiPostRequest($this->getApiEndpoint(), $data);
+        // Get products
+        $oyst_product = new OystProduct();
+        $result = $oyst_product->sendCatalog(0, 1);
         $result = Tools::jsonDecode($result, true);
-        return array('result' => false, 'values' => array('error'));
+        return array('result' => false, 'values' => $result);
     }
 
     public function paymentRequest($amount, $currency, $id_cart, $urls, $is_3d, $user)
@@ -99,7 +99,7 @@ class OystSDK
     public function productPostRequest($products)
     {
         $data = array('products' => $products);
-        return $this->_apiPostRequest($this->getApiEndpoint(), $data);
+        return $this->_apiPostRequest($this->getApiEndpoint().'/products', $data);
     }
 
     private function _apiPostRequest($endpoint, $data)
