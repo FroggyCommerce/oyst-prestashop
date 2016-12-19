@@ -88,10 +88,7 @@
                     <label class="control-label col-lg-3 ">{l s='Set the Oyst payment endpoint:' mod='oyst'}</label>
                     <div class="col-lg-9">
                         <input type="text" id="FC_OYST_API_PAYMENT_ENDPOINT" name="FC_OYST_API_PAYMENT_ENDPOINT" value="{$oyst.FC_OYST_API_PAYMENT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
-                        <p class="help-block">
-                            {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                            {l s='Test URL:' mod='oyst'} https://api.staging.uptain.eu/payment
-                        </p>
+                        {* https://api.staging.uptain.eu/payment *}
                     </div>
                 </div>
 
@@ -119,10 +116,6 @@
                     <label class="control-label col-lg-3 ">{l s='Set the Oyst catalog endpoint:' mod='oyst'}</label>
                     <div class="col-lg-9">
                         <input type="text" id="FC_OYST_API_EXPORT_ENDPOINT" name="FC_OYST_API_EXPORT_ENDPOINT" value="{$oyst.FC_OYST_API_EXPORT_ENDPOINT|escape:'htmlall':'UTF-8'}" />
-                        <p class="help-block">
-                            {l s='If you\'re not sure what to set, do not change it.' mod='oyst'}<br>
-                            {l s='Test URL:' mod='oyst'} http://catalog.staging.oyst.eu
-                        </p>
                     </div>
                 </div>
 
