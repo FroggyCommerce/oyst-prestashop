@@ -32,14 +32,12 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
     public $configurations = array(
 
         'FC_OYST_PAYMENT_FEATURE' => 'int',
-        'FC_OYST_CATALOG_EXPORT_FEATURE' => 'int',
-        'FC_OYST_IMPORT_ORDERS_FEATURE' => 'int',
-
         'FC_OYST_API_PAYMENT_KEY' => 'string',
         'FC_OYST_API_PAYMENT_ENDPOINT' => 'string',
-        'FC_OYST_API_EXPORT_ENDPOINT' => 'string',
 
-        'FC_OYST_EXPORT_CATS' => array('type' => 'multiple', 'field' => 'categoryBox'),
+        'FC_OYST_CATALOG_FEATURE' => 'int',
+        'FC_OYST_API_CATALOG_KEY' => 'string',
+        'FC_OYST_API_CATALOG_ENDPOINT' => 'string',
     );
 
     public function init()
@@ -98,7 +96,7 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
             $oyst_api = new OystSDK();
             $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));
             $oyst_api->setApiKey(Configuration::get('FC_OYST_API_PAYMENT_KEY'));
-            $assign['oyst_connection_test'] = $oyst_api->testRequest();
+            $assign['oyst_payment_connection_test'] = $oyst_api->testRequest();
         }
 
         $this->smarty->assign($this->module->name, $assign);

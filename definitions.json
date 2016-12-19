@@ -1,6 +1,6 @@
 {
     "tab" : "payments_gateways",
-    "version": "0.8.7.8",
+    "version": "0.8.7.9",
     "need_instance": 0,
 
     "hooks": {
@@ -14,14 +14,15 @@
 
     "configurations" : {
         "FC_OYST_HASH_KEY" : "",
+
         "FC_OYST_PAYMENT_FEATURE" : "0",
-        "FC_OYST_CATALOG_EXPORT_FEATURE" : "0",
-        "FC_OYST_IMPORT_ORDERS_FEATURE" : "0",
         "FC_OYST_API_PAYMENT_KEY" : "",
         "FC_OYST_API_PAYMENT_ENDPOINT" : "https://api.uptain.com/payment",
+
+        "FC_OYST_CATALOG_FEATURE" : "0",
         "FC_OYST_API_CATALOG_KEY" : "",
         "FC_OYST_API_CATALOG_ENDPOINT" : "https://api.uptain.com/catalog",
-        "FC_OYST_EXPORT_CATS" : "",
+
         "FC_OYST_CUSTOMER_CONFIG" : "",
         "FC_OYST_ADDRESS_CONFIG" : "",
         "FC_OYST_CART_CONFIG" : ""

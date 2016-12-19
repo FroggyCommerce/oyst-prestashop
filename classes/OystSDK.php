@@ -62,10 +62,10 @@ class OystSDK
         $result = $this->_apiPostRequest($this->getApiPaymentEndpoint().'/payments', $data);
         $result = Tools::jsonDecode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
-            return true;
+            return array('result' => true);
         }
 
-        return false;
+        return array('result' => false, 'values' => $result);
     }
 
     public function paymentRequest($amount, $currency, $id_cart, $urls, $is_3d, $user)
