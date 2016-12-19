@@ -4,7 +4,7 @@
     "need_instance": 0,
 
     "hooks": {
-        "all" : [ "displayHeader", "displayPayment", "displayPaymentReturn" ]
+        "all" : [ "displayHeader", "displayPayment", "displayPaymentReturn", "displayAdminOrder" ]
     },
 
     "sql" : {
