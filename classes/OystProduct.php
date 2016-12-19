@@ -136,7 +136,7 @@ class OystProduct
         // Export products
         $oyst_api = new OystSDK();
         $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_EXPORT_ENDPOINT'));
-        $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
+        $oyst_api->setApiKey(Configuration::get('FC_OYST_API_PAYMENT_KEY'));
         return $oyst_api->productPostRequest($products);
     }
 

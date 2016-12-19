@@ -35,7 +35,7 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         'FC_OYST_CATALOG_EXPORT_FEATURE' => 'int',
         'FC_OYST_IMPORT_ORDERS_FEATURE' => 'int',
 
-        'FC_OYST_API_KEY' => 'string',
+        'FC_OYST_API_PAYMENT_KEY' => 'string',
         'FC_OYST_API_PAYMENT_ENDPOINT' => 'string',
         'FC_OYST_API_EXPORT_ENDPOINT' => 'string',
 
@@ -97,7 +97,7 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         if (Configuration::get('FC_OYST_PAYMENT_FEATURE') == 1) {
             $oyst_api = new OystSDK();
             $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));
-            $oyst_api->setApiKey(Configuration::get('FC_OYST_API_KEY'));
+            $oyst_api->setApiKey(Configuration::get('FC_OYST_API_PAYMENT_KEY'));
             $assign['oyst_connection_test'] = $oyst_api->testRequest();
         }
 

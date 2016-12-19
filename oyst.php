@@ -61,7 +61,7 @@ class Oyst extends FroggyPaymentModule
     public function __construct()
     {
         $this->name = 'oyst';
-        $this->version = '0.8.7.7';
+        $this->version = '0.8.7.8';
         $this->author = 'Froggy Commerce / 23Prod';
         $this->tab = 'payments_gateways';
 
@@ -71,6 +71,7 @@ class Oyst extends FroggyPaymentModule
         $this->description = $this->l('Oyst provides 1 click shopping advertising technology and creates a new ecosystem at the crossroads of customised advertising and online payment.');
         $this->module_key = 'b79be2b346400227a9c886c9239470e4';
 
+        // Set Oyst version as define
         if (!defined('_PS_OYST_VERSION_')) {
             define('_PS_OYST_VERSION_', $this->version);
         }
@@ -78,6 +79,12 @@ class Oyst extends FroggyPaymentModule
         // If PS 1.6 or greater, we enable bootstrap
         if (version_compare(_PS_VERSION_, '1.6.0') >= 0) {
             $this->bootstrap = true;
+        }
+
+        // If old configuration variable exists, we migrate it
+        if (Configuration::get('FC_OYST_API_KEY') != '') {
+            Configuration::updateValue('FC_OYST_API_PAYMENT_KEY', Configuration::get('FC_OYST_API_KEY'));
+            Configuration::deleteByName('FC_OYST_API_KEY');
         }
     }
 

@@ -62,7 +62,7 @@
                 <div class="form-group clearfix">
                     <label class="control-label col-lg-3 ">{l s='Set your Oyst API key:' mod='oyst'}</label>
                     <div class="col-lg-9">
-                        <input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY|escape:'htmlall':'UTF-8'}" />
+                        <input type="text" id="FC_OYST_API_PAYMENT_KEY" name="FC_OYST_API_PAYMENT_KEY" value="{$oyst.FC_OYST_API_PAYMENT_KEY|escape:'htmlall':'UTF-8'}" />
                         <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
                         {if isset($oyst.oyst_connection_test)}
                             {if $oyst.oyst_connection_test}

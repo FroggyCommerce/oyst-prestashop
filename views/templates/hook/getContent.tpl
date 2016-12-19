@@ -40,7 +40,7 @@
             <div class="margin-form" style="padding-left:15px">
 
                 <p><b>{l s='Set your Oyst API key:' mod='oyst'}</b></p>
-                <div class="margin-form" style="padding-left:15px"><input type="text" id="FC_OYST_API_KEY" name="FC_OYST_API_KEY" value="{$oyst.FC_OYST_API_KEY|escape:'htmlall':'UTF-8'}" size="128" /></div>
+                <div class="margin-form" style="padding-left:15px"><input type="text" id="FC_OYST_API_PAYMENT_KEY" name="FC_OYST_API_PAYMENT_KEY" value="{$oyst.FC_OYST_API_PAYMENT_KEY|escape:'htmlall':'UTF-8'}" size="128" /></div>
                 <p class="help-block">{l s='You need this key to use Oyst payment but also so export your catalog and import orders' mod='oyst'}</p>
                 {if isset($oyst.oyst_connection_test)}
                     {if $oyst.oyst_connection_test}
