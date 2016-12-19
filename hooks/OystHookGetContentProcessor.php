@@ -92,7 +92,7 @@ class OystHookGetContentProcessor extends FroggyHookProcessor
         $assign['payment_notification_url'] = $this->context->link->getModuleLink('oyst', 'paymentNotification').'?key='.Configuration::get('FC_OYST_HASH_KEY');
         $assign['notification_url'] = $this->context->link->getModuleLink('oyst', 'notification').'?key='.Configuration::get('FC_OYST_HASH_KEY');
 
-        if (Configuration::get('FC_OYST_PAYMENT_FEATURE') == 1) {
+        if (Configuration::get('FC_OYST_API_PAYMENT_KEY') != '') {
             $oyst_api = new OystSDK();
             $oyst_api->setApiPaymentEndpoint(Configuration::get('FC_OYST_API_PAYMENT_ENDPOINT'));
             $oyst_api->setApiKey(Configuration::get('FC_OYST_API_PAYMENT_KEY'));
