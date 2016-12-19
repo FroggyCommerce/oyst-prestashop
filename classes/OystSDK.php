@@ -29,8 +29,7 @@ if (!defined('_PS_VERSION_')) {
 class OystSDK
 {
     private $_api_key;
-    private $_api_payment_endpoint;
-    private $_api_catalog_endpoint;
+    private $_api_endpoint;
 
     public function testPaymentRequest()
     {
@@ -59,7 +58,7 @@ class OystSDK
             ),
         );
 
-        $result = $this->_apiPostRequest($this->getApiPaymentEndpoint().'/payments', $data);
+        $result = $this->_apiPostRequest($this->getApiEndpoint().'/payments', $data);
         $result = Tools::jsonDecode($result, true);
         if (isset($result['url']) && !empty($result['url'])) {
             return array('result' => true);
@@ -70,6 +69,10 @@ class OystSDK
 
     public function testCatalogRequest()
     {
+        return array('result' => false, 'values' => array('error'));
+        $data = array('products' => $products);
+        $result = $this->_apiPostRequest($this->getApiEndpoint(), $data);
+        $result = Tools::jsonDecode($result, true);
         return array('result' => false, 'values' => array('error'));
     }
 
@@ -90,13 +93,13 @@ class OystSDK
             ),
             'user' => $user,
         );
-        return $this->_apiPostRequest($this->getApiPaymentEndpoint().'/payments', $data);
+        return $this->_apiPostRequest($this->getApiEndpoint().'/payments', $data);
     }
 
     public function productPostRequest($products)
     {
         $data = array('products' => $products);
-        return $this->_apiPostRequest($this->getApiPaymentEndpoint(), $data);
+        return $this->_apiPostRequest($this->getApiEndpoint(), $data);
     }
 
     private function _apiPostRequest($endpoint, $data)
@@ -139,36 +142,18 @@ class OystSDK
     /**
      * @return mixed
      */
-    public function getApiPaymentEndpoint()
+    public function getApiEndpoint()
     {
-        return $this->_api_payment_endpoint;
+        return $this->_api_endpoint;
     }
 
     /**
-     * @param mixed $api_payment_endpoint
+     * @param mixed $api_endpoint
      * @return OystLib
      */
-    public function setApiPaymentEndpoint($api_payment_endpoint)
+    public function setApiEndpoint($api_endpoint)
     {
-        $this->_api_payment_endpoint = $api_payment_endpoint;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getApiCatalogEndpoint()
-    {
-        return $this->_api_catalog_endpoint;
-    }
-
-    /**
-     * @param mixed $api_catalog_endpoint
-     * @return OystLib
-     */
-    public function setApiCatalogEndpoint($api_catalog_endpoint)
-    {
-        $this->_api_catalog_endpoint = $api_catalog_endpoint;
+        $this->_api_endpoint = $api_endpoint;
         return $this;
     }
 }
