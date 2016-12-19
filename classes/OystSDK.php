@@ -32,7 +32,7 @@ class OystSDK
     private $_api_payment_endpoint;
     private $_api_catalog_endpoint;
 
-    public function testRequest()
+    public function testPaymentRequest()
     {
         $data = array(
             'amount' => array(
@@ -66,6 +66,11 @@ class OystSDK
         }
 
         return array('result' => false, 'values' => $result);
+    }
+
+    public function testCatalogRequest()
+    {
+        return array('result' => false, 'values' => array('error'));
     }
 
     public function paymentRequest($amount, $currency, $id_cart, $urls, $is_3d, $user)

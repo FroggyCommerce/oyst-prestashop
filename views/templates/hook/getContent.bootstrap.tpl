@@ -111,11 +111,18 @@
                 <div class="col-lg-9">
                     <input type="text" id="FC_OYST_API_CATALOG_KEY" name="FC_OYST_API_CATALOG_KEY" value="{$oyst.FC_OYST_API_CATALOG_KEY|escape:'htmlall':'UTF-8'}" />
                     <p class="help-block">{l s='You need this key to use export your catalog and import orders' mod='oyst'}</p>
-                    {if isset($oyst.oyst_connection_test)}
-                        {if $oyst.oyst_connection_test}
+                    {if isset($oyst.oyst_catalog_connection_test.result)}
+                        {if $oyst.oyst_catalog_connection_test.result}
                             <div class="alert alert-success">{l s='Your key is valid!' mod='oyst'}</div>
                         {else}
-                            <div class="alert alert-danger">{l s='Your key seems invalid!' mod='oyst'}</div>
+                            <div class="alert alert-danger">
+                                {l s='Your key seems invalid!' mod='oyst'}
+                                <br>
+                                <input type="checkbox" id="oyst_catalog_connection_debug" name="oyst_catalog_connection_debug" value="1"{if $smarty.post.oyst_catalog_connection_debug} checked="checked"{/if} /> Debug
+                                {if isset($smarty.post.oyst_catalog_connection_debug) && $smarty.post.oyst_catalog_connection_debug}
+                                    <br><pre>{$oyst.oyst_catalog_connection_test.values|print_r}</pre>
+                                {/if}
+                            </div>
                         {/if}
                     {/if}
                 </div>
