@@ -154,7 +154,7 @@ class OystProduct
 
         // Init
         $limitSQL = '';
-        if ((int)$start > 0 && (int)$limit > 0) {
+        if ((int)$limit > 0) {
             $limitSQL = ' LIMIT '.(int)$start.','.(int)$limit;
         }
 
@@ -212,6 +212,7 @@ class OystProduct
         // Build product
         $product = array(
             'reference' => 'ID '.$product->id,
+            'reference' => $product->reference,
             'merchant_reference' => $product->reference,
             'is_active' => ($product->active == 1 ? true : false),
             'is_materialized' => ($product->is_virtual == 1 ? true : false),
@@ -278,7 +279,7 @@ class OystProduct
 
             // Retrieve names for category
             $category = new Category($id_category);
-            $c = array('titles' => array(), 'reference' => $id_category);
+            $c = array('titles' => array(), 'reference' => 'ID '.$id_category);
             foreach ($this->languages as $iso_code => $id_lang) {
                 if (isset($category->name[$id_lang])) {
                     $c['titles'][] = array(

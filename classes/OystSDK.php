@@ -38,7 +38,7 @@ class OystSDK
                 'value' => 100,
                 'currency' => 'EUR',
             ),
-            'is_3d' => true,
+            'is_3d' => false,
             'label' => 'ConnectionTest',
             'notification_url' => 'http://localhost.test',
             'order_id' => 'ConnectionTest',
@@ -71,9 +71,10 @@ class OystSDK
     {
         // Get products
         $oyst_product = new OystProduct();
-        $result = $oyst_product->sendCatalog(0, 1);
-        $result = Tools::jsonDecode($result, true);
-        return array('result' => false, 'values' => $result);
+        $return = $oyst_product->sendCatalog(0, 1);
+        $return = Tools::jsonDecode($return, true);
+        $result = (isset($return['statusCode'])  && $return['statusCode'] == 200) ? true : false;
+        return array('result' => $result, 'values' => $return);
     }
 
     public function paymentRequest($amount, $currency, $id_cart, $urls, $is_3d, $user)
