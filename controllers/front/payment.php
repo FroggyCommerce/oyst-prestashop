@@ -54,7 +54,7 @@ class OystPaymentModuleFrontController extends ModuleFrontController
             'return' => $this->context->link->getModuleLink('oyst', 'paymentReturn').$glue.'id_cart='.$this->context->cart->id.'&key='.$this->context->customer->secure_key,
         );
         $currency = new Currency($this->context->cart->id_currency);
-        $total_amount = (int)ceil($this->context->cart->getOrderTotal() * 100);
+        $total_amount = (int)round($this->context->cart->getOrderTotal() * 100);
 
         // Build user variables
         $addresses_oyst = array();
