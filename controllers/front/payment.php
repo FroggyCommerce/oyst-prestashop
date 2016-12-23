@@ -82,7 +82,21 @@ class OystPaymentModuleFrontController extends ModuleFrontController
                 'street' => $address->address1,
             );
         }
+
+        $customer_data = array();
+        $customer_fields = array(
+            'id_gender', 'id_lang', 'lastname', 'firstname', 'birthday', 'email', 'newsletter', 'newsletter_date_add',
+            'optin', 'website', 'company', 'siret', 'ape', 'active', 'date_add', 'date_upd',
+        );
+        foreach ($customer_fields as $field) {
+            $customer_data[$field] = $this->context->customer->$field;
+        }
+
         $user = array(
+            'additional_data' => array(
+                'customer' => $customer_data,
+                'addresses' => $this->context->customer->getAddresses($this->context->customer->id_lang),
+            ),
             'addresses' => array($addresses_oyst[1]),
             'billing_addresses' => array($addresses_oyst[0]),
             'email' => $this->context->customer->email,
